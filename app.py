@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import datetime
+from collections import defaultdict
 
 app = Flask(__name__)
 DB_NAME = 'journal.db'
@@ -37,7 +38,14 @@ def index():
     
     entries = conn.execute('SELECT * FROM entries ORDER BY timestamp DESC').fetchall()
     conn.close()
-    return render_template('index.html', entries=entries)
+
+    # Create a dictionary to group entries by date
+    entries_by_date = defaultdict(list)
+    for entry in entries:
+        date_part = entry['timestamp'].split(' ')[0] # Extract YYYY-MM-DD
+        entries_by_date[date_part].append(entry)
+
+    return render_template('index.html', entries_by_date=entries_by_date)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,3 +1,37 @@
-﻿body
-{
+﻿body {
+    font-family: sans-serif;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+.journal-entry-form {
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.date-section {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.date-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    fill: #FFFFED;
+}
+
+.entry {
+    margin-bottom: 10px;
+}
+
+.timestamp {
+    font-weight: bold;
+    color: #555;
 }
