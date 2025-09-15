@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interstitial Journal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Project Echo</h1>
+    <h3>Interstitial Journaling</h3>
+    <form method="post" action="{{ url_for('index') }}">
+        <textarea name="content" rows="4" cols="50" placeholder="What just happened? What's next?"></textarea>
+        <br>
+        <button type="submit">Log Entry</button>
+    </form>
+
+    <hr>
+
+    <h2>Past Entries</h2>
+    <div class="entries-list">
+        {% for entry in entries %}
+        <div class="entry">
+            <p class="timestamp">{{ entry.timestamp }}</p>
+            <p>{{ entry.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
