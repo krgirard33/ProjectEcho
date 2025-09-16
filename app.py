@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import datetime
 from collections import defaultdict
+import webbrowser
 
 app = Flask(__name__)
 DB_NAME = 'journal.db'
@@ -36,7 +37,7 @@ def index():
         conn.close()
         return redirect(url_for('index'))
     
-    entries = conn.execute('SELECT * FROM entries ORDER BY timestamp DESC').fetchall()
+    entries = conn.execute('SELECT * FROM entries ORDER BY timestamp ASC').fetchall()
     conn.close()
 
     # Create a dictionary to group entries by date
@@ -48,14 +49,15 @@ def index():
     return render_template('index.html', entries_by_date=entries_by_date)
 
 if __name__ == '__main__':
+    # You can specify the browser to use
+    firefox_path = "C:/Program Files/Mozilla Firefox/firefox.exe %s" # Windows example
+    # For macOS: firefox_path = "open -a /Applications/Firefox.app %s"
+    # For Linux: firefox_path = "/usr/bin/firefox %s"
+
+    webbrowser.register('firefox', None, webbrowser.BackgroundBrowser(firefox_path))
+
+    # Open the browser in a new tab
+    webbrowser.get('firefox').open_new_tab('http://127.0.0.1:5000/')
+
     app.run(debug=True)
 
-    """
-    import os
-    HOST = os.environ.get('SERVER_HOST', 'localhost')
-    try:
-        PORT = int(os.environ.get('SERVER_PORT', '5555'))
-    except ValueError:
-        PORT = 5555
-    app.run(HOST, PORT)
-    """

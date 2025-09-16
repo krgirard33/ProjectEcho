@@ -21,7 +21,7 @@
     <div class="entries-list">
         {% for date, entries in entries_by_date.items() %}
         <div class="date-section">
-            <h3 class="date-header">{{ date }}</h3>
+            <h3 class="date-header" onclick="toggleEntries(this)">{{ date }}</h3>
             <ul style="list-style-type: none; padding: 0;">
                 {% for entry in entries %}
                 <li class="entry">
@@ -32,5 +32,8 @@
         </div>
         {% endfor %}
     </div>
+
+    <script type = "text/javascript" src="{{ url_for('static', filename='scripts.js') }}"></script>
+
 </body>
 </html>

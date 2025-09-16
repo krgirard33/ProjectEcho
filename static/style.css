@@ -24,7 +24,10 @@ textarea {
     font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 10px;
-    fill: #FFFFED;
+    background-color: #FFFFED;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border-bottom: 1px solid #ddd;
 }
 
 .entry {
@@ -35,3 +38,6 @@ textarea {
     font-weight: bold;
     color: #555;
 }
+.hidden {
+    display: none;
+} 
