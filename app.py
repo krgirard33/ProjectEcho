@@ -3,6 +3,8 @@ import sqlite3
 import datetime
 from collections import defaultdict
 import webbrowser
+import threading
+import os
 
 app = Flask(__name__)
 DB_NAME = 'journal.db'
@@ -35,6 +37,7 @@ def index():
                      (timestamp, content))
         conn.commit()
         conn.close()
+        #SERVER_NAME = 'localhost' 
         return redirect(url_for('index'))
     
     entries = conn.execute('SELECT * FROM entries ORDER BY timestamp ASC').fetchall()
@@ -46,18 +49,17 @@ def index():
         date_part = entry['timestamp'].split(' ')[0] # Extract YYYY-MM-DD
         entries_by_date[date_part].append(entry)
 
-    return render_template('index.html', entries_by_date=entries_by_date)
+    return render_template('index.html', entries_by_date=reversed(entries_by_date.items()))
 
 if __name__ == '__main__':
-    # You can specify the browser to use
-    firefox_path = "C:/Program Files/Mozilla Firefox/firefox.exe %s" # Windows example
-    # For macOS: firefox_path = "open -a /Applications/Firefox.app %s"
-    # For Linux: firefox_path = "/usr/bin/firefox %s"
+    # This check ensures the code runs only in the main process
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+        def open_browser():
+            # Using the default browser is more reliable
+            webbrowser.open_new_tab('http://localhost:5000/')
 
-    webbrowser.register('firefox', None, webbrowser.BackgroundBrowser(firefox_path))
-
-    # Open the browser in a new tab
-    webbrowser.get('firefox').open_new_tab('http://127.0.0.1:5000/')
-
-    app.run(debug=True)
-
+        # We delay opening the browser to give the server a moment to start
+        threading.Timer(1, open_browser).start()
+    
+    app.run(port=5000, debug=True)
+    
