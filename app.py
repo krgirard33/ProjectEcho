@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import datetime
+from collections import defaultdict
+import webbrowser
+import threading
+import os
 
 app = Flask(__name__)
 DB_NAME = 'journal.db'
@@ -33,21 +37,29 @@ def index():
                      (timestamp, content))
         conn.commit()
         conn.close()
+        #SERVER_NAME = 'localhost' 
         return redirect(url_for('index'))
     
-    entries = conn.execute('SELECT * FROM entries ORDER BY timestamp DESC').fetchall()
+    entries = conn.execute('SELECT * FROM entries ORDER BY timestamp ASC').fetchall()
     conn.close()
-    return render_template('index.html', entries=entries)
+
+    # Create a dictionary to group entries by date
+    entries_by_date = defaultdict(list)
+    for entry in entries:
+        date_part = entry['timestamp'].split(' ')[0] # Extract YYYY-MM-DD
+        entries_by_date[date_part].append(entry)
+
+    return render_template('index.html', entries_by_date=reversed(entries_by_date.items()))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # This check ensures the code runs only in the main process
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+        def open_browser():
+            # Using the default browser is more reliable
+            webbrowser.open_new_tab('http://localhost:5000/')
 
-    """
-    import os
-    HOST = os.environ.get('SERVER_HOST', 'localhost')
-    try:
-        PORT = int(os.environ.get('SERVER_PORT', '5555'))
-    except ValueError:
-        PORT = 5555
-    app.run(HOST, PORT)
-    """
+        # We delay opening the browser to give the server a moment to start
+        threading.Timer(1, open_browser).start()
+    
+    app.run(port=5000, debug=True)
+    
