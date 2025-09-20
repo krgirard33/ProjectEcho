@@ -6,10 +6,11 @@
     <title>Project Echo - Interstitial Journaling</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <h1>Project Echo</h1>
     <h3>Interstitial Journaling</h3>
-    <form method="post" action="{{ url_for('index') }}">
+    <form method="post" action="{{ url_for('index') }}" class="journal-entry-form">
         <textarea name="content" rows="4" cols="50" placeholder="What just happened? What's next?"></textarea>
         <br>
         <button type="submit">Log Entry</button>
@@ -18,14 +19,16 @@
     <hr>
 
     <h2>Past Entries</h2>
-    <div class="entries-list">
+    <div class="entries-by-date">
         {% for date, entries in entries_by_date %}
         <div class="date-section">
             <h3 class="date-header" onclick="toggleEntries(this)">{{ date }}</h3>
             <ul style="list-style-type: none; padding: 0;">
                 {% for entry in entries %}
                 <li class="entry">
-                    <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span> - {{ entry.content }}
+                    <a href="{{ url_for('edit', entry_id=entry.id) }}">
+                        <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span> - {{ entry.content }}
+                    </a>
                 </li>
                 {% endfor %}
             </ul>

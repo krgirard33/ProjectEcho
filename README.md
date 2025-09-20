@@ -8,7 +8,8 @@ Plans for the future:
 * Create a calendar that will let me click on a date and see all the entries for that date. 
 * Have it show me how long between entries
 * Maybe figure out a way to have it make me enter a goal list for the day
-* Re order date/time, so that the most recent is at the top.
+* <del> Re order date/time, so that the most recent is at the top. </del> 
+* Allow for editing of entries.
 
 
 reference: https://nesslabs.com/interstitial-journaling
