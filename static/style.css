@@ -36,23 +36,30 @@ textarea {
     text-decoration: none;
 }
 
-    .entry a {
-        text-decoration: none; /* Remove underline from links */
-        color: #333; /* Dark gray text color */
-        display: block; /* Make the whole list item clickable */
-        padding: 5px;
-        border: 1px solid transparent; /* A transparent border to maintain spacing */
-    }
+.entry a {
+    text-decoration: none; /* Remove underline from links */
+    color: #333; /* Dark gray text color */
+    display: block; /* Make the whole list item clickable */
+    padding: 5px;
+    border: 1px solid transparent; /* A transparent border to maintain spacing */
+}
 
-        .entry a:hover {
-            background-color: #f0f0f0; /* Highlight on hover */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+.entry a:hover {
+    background-color: #f0f0f0; /* Highlight on hover */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
 
 .timestamp {
     font-weight: bold;
     color: #555;
+}
+
+.time-elapsed {
+    color: #888;
+    font-style: italic;
+    font-size: 0.9em;
+    margin-left: 10px;
 }
 
 .hidden {

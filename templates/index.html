@@ -28,6 +28,9 @@
                 <li class="entry">
                     <a href="{{ url_for('edit', entry_id=entry.id) }}">
                         <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span> - {{ entry.content }}
+                        {% if entry.time_elapsed %}
+                            <span class="time-elapsed">({{ entry.time_elapsed }})</span>
+                        {% endif %}
                     </a>
                 </li>
                 {% endfor %}

@@ -43,12 +43,25 @@ def index():
     entries = conn.execute('SELECT * FROM entries ORDER BY timestamp ASC').fetchall()
     conn.close()
 
-    # Create a dictionary to group entries by date
     entries_by_date = defaultdict(list)
-    for entry in entries:
-        date_part = entry['timestamp'].split(' ')[0] # Extract YYYY-MM-DD
-        entries_by_date[date_part].append(entry)
+    previous_timestamp = None
 
+    for entry in entries:
+        current_timestamp_str = entry['timestamp']
+        date_part = current_timestamp_str.split(' ')[0]
+        
+        # Calculate time difference
+        time_elapsed = None
+        if previous_timestamp and date_part == previous_timestamp.strftime('%Y-%m-%d'):
+            time_elapsed = datetime.datetime.strptime(current_timestamp_str, '%Y-%m-%d %H:%M:%S') - previous_timestamp
+            
+        # Add the calculated time to the entry dictionary
+        entry_with_time = dict(entry)
+        entry_with_time['time_elapsed'] = time_elapsed
+        
+        entries_by_date[date_part].append(entry_with_time)
+        previous_timestamp = datetime.datetime.strptime(current_timestamp_str, '%Y-%m-%d %H:%M:%S')
+        
     return render_template('index.html', entries_by_date=reversed(entries_by_date.items()))
 
 @app.route('/edit/<int:entry_id>', methods=('GET', 'POST'))
