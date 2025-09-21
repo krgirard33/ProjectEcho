@@ -1,11 +1,101 @@
-﻿body {
+﻿/* Menu Styles */
+.main-header {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+    .main-header nav {
+        text-align: center;
+    }
+
+    .main-header a {
+        text-decoration: none;
+        color: #555;
+        margin: 0 15px;
+        font-weight: bold;
+    }
+
+        .main-header a:hover {
+            color: #333;
+        }
+
+/* General Layout */
+body {
     font-family: sans-serif;
+}
+
+.container {
     max-width: 800px;
     margin: auto;
     padding: 20px;
 }
 
+/* Calendar Styles */
+.calendar-header {
+    margin-bottom: 20px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.calendar-header-row {
+    display: contents;
+    font-weight: bold;
+    text-align: center;
+}
+
+    .calendar-header-row > div {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+.calendar-week {
+    display: contents;
+}
+
+.calendar-day {
+    text-align: center;
+    padding: 15px 5px;
+    border: 1px solid #eee;
+    text-decoration: none;
+    color: #333;
+}
+
+    .calendar-day:hover {
+        background-color: #f0f0f0;
+    }
+
+    .calendar-day.empty {
+        background-color: #f9f9f9;
+        border-color: #f9f9f9;
+    }
+
+    .calendar-day.has-entry {
+        background-color: #FFFFED;
+    }
+
+.back-link {
+    display: block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #555;
+}
+
+.instruction-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #888;
+}
+
+/* Existing Styles */
 .journal-entry-form {
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -14,41 +104,23 @@ textarea {
     box-sizing: border-box;
 }
 
-.date-section {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-}
-
-.date-header {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 10px;
-    background-color: #FFFFED;
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: inline-block;
-    cursor: pointer;
-}
-
 .entry {
     margin-bottom: 10px;
-    text-decoration: none;
 }
 
 .entry a {
-    text-decoration: none; /* Remove underline from links */
-    color: #333; /* Dark gray text color */
-    display: block; /* Make the whole list item clickable */
+    text-decoration: none;
+    color: #333;
+    display: block;
     padding: 5px;
-    border: 1px solid transparent; /* A transparent border to maintain spacing */
+    border: 1px solid transparent;
 }
 
-.entry a:hover {
-    background-color: #f0f0f0; /* Highlight on hover */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+    .entry a:hover {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
 
 .timestamp {
     font-weight: bold;
@@ -60,6 +132,19 @@ textarea {
     font-style: italic;
     font-size: 0.9em;
     margin-left: 10px;
+}
+.date-section {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.date-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background-color: #FFFFED;
+    border: 1px solid #ccc;
 }
 
 .hidden {

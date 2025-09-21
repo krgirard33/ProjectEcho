@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Entries for {{ date }} - Project Echo{% endblock %}
+
+{% block content %}
+<h1>Entries for {{ date }}</h1>
+<div class="journal-entry-form">
+    <form method="post">
+        <textarea name="content" rows="4" placeholder="What just happened? What's next?"></textarea>
+        <br>
+        <button type="submit">Log Entry</button>
+    </form>
+</div>
+
+<div class="entries-list-container">
+    {% for entry in entries %}
+    <div class="entry">
+        <a href="{{ url_for('edit', entry_id=entry.id) }}">
+            <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span> - {{ entry.content }}
+            {% if entry.time_elapsed %}
+            <span class="time-elapsed">({{ entry.time_elapsed }})</span>
+            {% endif %}
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="calendar-header">{{ month }} {{ year }}</h2>
+<div class="calendar">
+    <div class="calendar-header-row">
+        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+    </div>
+    {% for week in month_data %}
+    <div class="calendar-week">
+        {% for day_info in week %}
+        {% if day_info %}
+        <a href="{{ url_for('view_day', date=day_info.date) }}" class="calendar-day {% if day_info.has_entry %}has-entry{% endif %}">
+            {{ day_info.day }}
+        </a>
+        {% else %}
+        <div class="calendar-day empty"></div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+<p class="instruction-text">Click on a date to view its entries.</p>
+{% endblock %}
