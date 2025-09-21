@@ -1,7 +1,10 @@
-function toggleEntries(header) {
-    // Get the next sibling element, which should be the <ul> list
-    const list = header.nextElementSibling;
+document.addEventListener('DOMContentLoaded', function () {
+    const dateHeaders = document.querySelectorAll('.date-section .date-header');
 
-    // Toggle the 'hidden' class on the list
-    list.classList.toggle('hidden');
-}
+    dateHeaders.forEach(header => {
+        header.addEventListener('click', function () {
+            const list = this.nextElementSibling;
+            list.classList.toggle('hidden');
+        });
+    });
+});

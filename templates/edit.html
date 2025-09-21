@@ -1,57 +1,17 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Entry - Project Echo</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-        }
+﻿{% extends "base.html" %}
 
-        h1 {
-            text-align: center;
-        }
+{% block title %}Edit Entry - Project Echo{% endblock %}
 
-        .edit-form-container {
-            margin-top: 50px;
-        }
-
-        textarea {
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .button-container {
-            margin-top: 10px;
-        }
-
-            .button-container button {
-                padding: 10px 20px;
-            }
-
-            .button-container a {
-                padding: 10px 20px;
-                text-decoration: none;
-                color: #333;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-            }
-    </style>
-</head>
-<body>
-    <h1>Edit Journal Entry</h1>
-    <div class="edit-form-container">
-        <form method="post" action="{{ url_for('edit', entry_id=entry.id) }}">
-            <textarea name="content" rows="10" cols="50">{{ entry.content }}</textarea>
-            <div class="button-container">
-                <button type="submit">Save Changes</button>
-                <a href="{{ url_for('index') }}">Cancel</a>
-            </div>
-        </form>
-    </div>
-</body>
-</html>
+{% block content %}
+<h1>Edit Journal Entry</h1>
+<div class="edit-form-container">
+    <form method="post" action="{{ url_for('edit', entry_id=entry.id) }}">
+        <textarea name="content" rows="10" cols="50">{{ entry.content }}</textarea>
+        <input type="hidden" name="original_date" value="{{ original_date }}">
+        <div class="button-container">
+            <button type="submit">Save Changes</button>
+            <a href="{{ url_for('view_day', date=original_date) }}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

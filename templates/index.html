@@ -1,45 +1,31 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Echo - Interstitial Journaling</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+﻿{% extends "base.html" %}
 
-<body>
-    <h1>Project Echo</h1>
-    <h3>Interstitial Journaling</h3>
-    <form method="post" action="{{ url_for('index') }}" class="journal-entry-form">
-        <textarea name="content" rows="4" cols="50" placeholder="What just happened? What's next?"></textarea>
-        <br>
-        <button type="submit">Log Entry</button>
-    </form>
+{% block content %}
+<h1>Project Echo</h1>
+<form method="post" action="{{ url_for('index') }}" class="journal-entry-form">
+    <textarea name="content" rows="4" cols="50" placeholder="What just happened? What's next?"></textarea>
+    <br>
+    <button type="submit">Log Entry</button>
+</form>
 
-    <hr>
-
-    <h2>Past Entries</h2>
-    <div class="entries-by-date">
-        {% for date, entries in entries_by_date %}
-        <div class="date-section">
-            <h3 class="date-header" onclick="toggleEntries(this)">{{ date }}</h3>
-            <ul style="list-style-type: none; padding: 0;">
-                {% for entry in entries %}
-                <li class="entry">
-                    <a href="{{ url_for('edit', entry_id=entry.id) }}">
-                        <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span> - {{ entry.content }}
-                        {% if entry.time_elapsed %}
-                            <span class="time-elapsed">({{ entry.time_elapsed }})</span>
-                        {% endif %}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endfor %}
+<h2>Past Entries</h2>
+<div class="entries-by-date">
+    {% for date, entries in entries_by_date %}
+    <div class="date-section">
+        <h3 class="date-header">{{ date }}</h3>
+        <ul class="entries-list" style="list-style-type: none; padding: 0;">
+            {% for entry in entries %}
+            <li class="entry">
+                <a href="{{ url_for('edit', entry_id=entry.id) }}">
+                    <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span> - {{ entry.content }}
+                    {% if entry.time_elapsed %}
+                    <span class="time-elapsed">({{ entry.time_elapsed }})</span>
+                    {% endif %}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
-
-    <script type = "text/javascript" src="{{ url_for('static', filename='scripts.js') }}"></script>
-
-</body>
-</html>
+    {% endfor %}
+</div>
+{% endblock %}
