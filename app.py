@@ -6,8 +6,8 @@ import webbrowser
 import threading
 import os
 # Import the blueprints
-from calendar_app import calendar_bp
-from todo import todo_bp
+from calendar_app import calendar_bp 
+from todo import todo_bp 
 
 # Set the app up as a package
 app = Flask(__name__)

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Todo List{% endblock %}
 
@@ -19,27 +19,28 @@
             <option value="backlog">Backlog</option>
             <option value="holding">Holding</option>
             <option value="started">Started</option>
-            <option value="finished">Finished</option>
         </select>
         <button type="submit">Add Task</button>
     </form>
 </div>
 
 <div class="todo-list-container">
-    {% for project, items in todos_by_project.items() %}
+    <h2>Active Tasks</h2>
+    {% for project, items in active_todos_by_project.items() %}
     <div class="project-section">
         <h3>{{ project }}</h3>
-        <ul>
+        <ul class="todo-list">
             {% for item in items %}
             <li class="todo-item status-{{ item.status }}">
-                <div class="item-content">
+                <div class="item-details">
+                    <a href="{{ url_for('todo_bp.edit_todo', item_id=item.id) }}" class="edit-link">✏️</a>
                     <span class="item-text">{{ item.item }}</span>
                     <span class="priority priority-{{ item.priority }}">{{ item.priority }}</span>
                 </div>
                 <div class="item-dates">
                     {% if item.start_date %}<span>Start: {{ item.start_date }}</span>{% endif %}
                     {% if item.due_date %}<span>Due: {{ item.due_date }}</span>{% endif %}
-                    {% if item.finished_date %}<span>Finished: {{ item.finished_date }}</span>{% endif %}
+                    <span class="status-badge status-{{ item.status }}">{{ item.status | capitalize }}</span>
                 </div>
             </li>
             {% endfor %}
@@ -47,4 +48,31 @@
     </div>
     {% endfor %}
 </div>
+
+
+{% if finished_todos_by_project %}
+<div class="finished-list-container">
+    <h2 class="finished-header">Done</h2>
+
+    {% for project, items in finished_todos_by_project %}
+    <div class="project-section finished-project-section">
+        <h3>{{ project }}</h3>
+        <ul class="todo-list">
+            {% for item in items %}
+            <li class="todo-item finished-item">
+                <div class="item-details">
+                    <a href="{{ url_for('todo_bp.edit_todo', item_id=item.id) }}" class="edit-link">✏️</a>
+                    <span class="item-text">{{ item.item }}</span>
+                    <span class="priority priority-{{ item.priority }}">{{ item.priority }}</span>
+                </div>
+                <div class="item-dates">
+                    <span class="finished-tag">Finished: {{ item.finished_date }}</span>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+    {% endif %}
 {% endblock %}
