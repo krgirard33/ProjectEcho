@@ -5,12 +5,12 @@
 {% block content %}
 <h1>Edit Journal Entry</h1>
 <div class="edit-form-container">
-    <form method="post" action="{{ url_for('edit', entry_id=entry.id) }}">
+    <form method="post" action="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}">
         <textarea name="content" rows="10" cols="50">{{ entry.content }}</textarea>
         <input type="hidden" name="original_date" value="{{ original_date }}">
         <div class="button-container">
             <button type="submit">Save Changes</button>
-            <a href="{{ url_for('view_day', date=original_date) }}">Cancel</a>
+            <a href="{{ url_for('calendar_bp.view_day', date=original_date) }}">Cancel</a>
         </div>
     </form>
 </div>

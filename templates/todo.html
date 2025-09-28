@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Todo List{% endblock %}
+
+{% block content %}
+<h1>Todo List</h1>
+<div class="todo-form-container">
+    <form method="post" action="{{ url_for('todo_bp.todo') }}">
+        <input type="text" name="project" placeholder="Project" required>
+        <input type="text" name="item" placeholder="Task Item" required>
+        <input type="date" name="start_date" placeholder="Start Date">
+        <input type="date" name="due_date" placeholder="Due Date">
+        <select name="priority">
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+        </select>
+        <select name="status">
+            <option value="backlog">Backlog</option>
+            <option value="holding">Holding</option>
+            <option value="started">Started</option>
+            <option value="finished">Finished</option>
+        </select>
+        <button type="submit">Add Task</button>
+    </form>
+</div>
+
+<div class="todo-list-container">
+    {% for project, items in todos_by_project.items() %}
+    <div class="project-section">
+        <h3>{{ project }}</h3>
+        <ul>
+            {% for item in items %}
+            <li class="todo-item status-{{ item.status }}">
+                <div class="item-content">
+                    <span class="item-text">{{ item.item }}</span>
+                    <span class="priority priority-{{ item.priority }}">{{ item.priority }}</span>
+                </div>
+                <div class="item-dates">
+                    {% if item.start_date %}<span>Start: {{ item.start_date }}</span>{% endif %}
+                    {% if item.due_date %}<span>Due: {{ item.due_date }}</span>{% endif %}
+                    {% if item.finished_date %}<span>Finished: {{ item.finished_date }}</span>{% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
