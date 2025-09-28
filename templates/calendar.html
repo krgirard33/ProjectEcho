@@ -10,7 +10,7 @@
     <div class="calendar-week">
         {% for day_info in week %}
         {% if day_info %}
-        <a href="{{ url_for('view_day', date=day_info.date) }}" class="calendar-day {% if day_info.has_entry %}has-entry{% endif %}">
+        <a href="{{ url_for('calendar_bp.view_day', date=day_info.date) }}" class="calendar-day {% if day_info.has_entry %}has-entry{% endif %}">
             {{ day_info.day }}
         </a>
         {% else %}

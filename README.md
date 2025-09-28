@@ -2,6 +2,8 @@
 
 Interstitial Journaling app. Mostly, I need a better way to track what I am working on at work, and this concept looked interesting. 
 
+reference: https://nesslabs.com/interstitial-journaling
+
 ## Features added:
 
 * Show elapsed time since last entry on the same date. 
@@ -18,6 +20,17 @@ Interstitial Journaling app. Mostly, I need a better way to track what I am work
 * Have it show me how long between entries
 * Maybe figure out a way to have it make me enter a goal list for the day
 
+### Home page
+![Alt text](img/ProjectEcho-home.png "Home page")
 
+### Calendar page
+![Alt text](img/ProjectEcho-calendar.png "Calendar page")
 
-reference: https://nesslabs.com/interstitial-journaling
+### Day page
+![Alt text](img/ProjectEcho-day.png "Day page")
+
+### Edit page
+![Alt text](img/ProjectEcho-edit.png "Edit page")
+
+### Todo page
+![Alt text](img/ProjectEcho-todo.png "Todo page")

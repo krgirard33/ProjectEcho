@@ -10,7 +10,8 @@
     <header class="main-header">
         <nav>
             <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('calendar_view') }}">Calendar</a>
+            <a href="{{ url_for('calendar_bp.calendar_view') }}">Calendar</a>
+            <a href="{{ url_for('todo_bp.todo') }}">Todo</a>
         </nav>
     </header>
     <div class="container">
