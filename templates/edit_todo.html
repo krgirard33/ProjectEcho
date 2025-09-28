@@ -1,0 +1,43 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Edit Todo - {{ item.item }}{% endblock %}
+
+{% block content %}
+<h1>Edit Task: {{ item.item }}</h1>
+
+<div class="todo-form-container">
+    <form method="post" action="{{ url_for('todo_bp.edit_todo', item_id=item.id) }}">
+
+        <label for="project">Project:</label>
+        <input type="text" id="project" name="project" value="{{ item.project }}" required>
+
+        <label for="item">Task Item:</label>
+        <input type="text" id="item" name="item" value="{{ item.item }}" required>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ item.start_date }}" placeholder="Start Date">
+
+        <label for="due_date">Due Date:</label>
+        <input type="date" id="due_date" name="due_date" value="{{ item.due_date }}" placeholder="Due Date">
+
+        <label for="priority">Priority:</label>
+        <select id="priority" name="priority">
+            {% for p in ['low', 'medium', 'high'] %}
+            <option value="{{ p }}" {% if item.priority==p %}selected{% endif %}>{{ p | capitalize }} Priority</option>
+            {% endfor %}
+        </select>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            {% for s in ['backlog', 'holding', 'started', 'finished'] %}
+            <option value="{{ s }}" {% if item.status==s %}selected{% endif %}>{{ s | capitalize }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="button-group">
+            <button type="submit">Save Changes</button>
+            <a href="{{ url_for('todo_bp.todo') }}" class="button-link">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

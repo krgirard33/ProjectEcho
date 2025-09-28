@@ -186,6 +186,7 @@ textarea {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #eee;
+    background-color: white; /* Ensure active items are visible */
 }
 
 .item-content {
@@ -217,3 +218,68 @@ textarea {
     text-decoration: line-through;
     color: #888;
 }
+
+.item-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-link {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: #999;
+}
+
+/* FINISHED ITEM STYLES */
+.finished-list-container {
+    margin-top: 40px;
+    border-top: 2px solid #ccc;
+    padding-top: 20px;
+}
+
+.finished-header {
+    color: #666;
+    font-size: 1.5em;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 5px;
+}
+
+.finished-item {
+    background-color: #f7f7f7;
+}
+
+    .finished-item .item-text {
+        text-decoration: line-through;
+        color: #888;
+    }
+
+.finished-tag {
+    font-style: italic;
+    color: #4CAF50; /* Green color */
+    font-size: 0.9em;
+}
+
+/* Status Badges for Active Items (Optional, but looks cleaner) */
+.status-badge {
+    font-size: 0.8em;
+    padding: 3px 6px;
+    border-radius: 3px;
+    color: white;
+    margin-left: 10px;
+}
+
+.status-backlog {
+    background-color: #6c757d;
+}
+
+.status-holding {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.status-started {
+    background-color: #007bff;
+}
+
+
