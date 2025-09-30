@@ -11,14 +11,13 @@ reference: https://nesslabs.com/interstitial-journaling
 * Allow for editing of entries.
 * Make dates collapse
 * Enter time stamped data
-
-
+* Create a calendar that will let me click on a date and see all the entries for that date. 
+* Have it show me how long between entries
+* Home page entries need to have a project entry.
 ## Plans for the future: 
 
 * Limit what shows in the past to just the last 14 dates. 
-* Create a calendar that will let me click on a date and see all the entries for that date. 
-* Have it show me how long between entries
-* Maybe figure out a way to have it make me enter a goal list for the day
+* Maybe figure out a way to have it make me enter a goal list for the day  
 
 ### Home page
 ![Alt text](img/ProjectEcho-home.png "Home page")

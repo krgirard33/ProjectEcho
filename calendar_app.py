@@ -81,8 +81,9 @@ def edit(entry_id):
     conn = get_db_connection()
     if request.method == 'POST':
         content = request.form['content']
+        project = request.form.get('project') or None
         original_date = request.form['original_date']
-        conn.execute('UPDATE entries SET content = ? WHERE id = ?', (content, entry_id))
+        conn.execute('UPDATE entries SET content = ?, project = ? WHERE id = ?', (content, project, entry_id))
         conn.commit()
         conn.close()
         return redirect(url_for('calendar_bp.view_day', date=original_date))

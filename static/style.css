@@ -282,4 +282,32 @@ textarea {
     background-color: #007bff;
 }
 
+/* Style for Project tag on entries */
+.entry-project {
+    font-weight: bold;
+    color: #4CAF50; /* A distinct color like green */
+    margin-right: 5px;
+}
 
+.project-input {
+    margin-bottom: 5px;
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    width: 98%; /* Match textarea width */
+}
+/* Edit Form */
+edit-form-container label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.edit-form-container .project-input-edit {
+    width: 98%;
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}

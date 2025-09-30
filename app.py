@@ -28,6 +28,13 @@ def init_db():
             content TEXT NOT NULL
         );
     ''')
+    # Add the 'project' column if it doesn't exist
+    try:
+        conn.execute("ALTER TABLE entries ADD COLUMN project TEXT;")
+    except sqlite3.OperationalError:
+        # This will fail if the column already exists, which is fine
+        pass 
+
     conn.execute('''
         CREATE TABLE IF NOT EXISTS todos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,9 +62,10 @@ def index():
     conn = get_db_connection()
     if request.method == 'POST':
         content = request.form['content']
+        project = request.form.get('project') or None
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        conn.execute('INSERT INTO entries (timestamp, content) VALUES (?, ?)',
-                     (timestamp, content))
+        conn.execute('INSERT INTO entries (timestamp, content, project) VALUES (?, ?, ?)',
+                     (timestamp, content, project))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
