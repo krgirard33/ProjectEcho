@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+﻿from flask import Blueprint, render_template, request, redirect, url_for
 import datetime
 import calendar
 from collections import defaultdict
@@ -14,17 +14,54 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-@calendar_bp.route('/calendar')
-def calendar_view():
+# calendar_app.py
+
+from flask import Blueprint, render_template, request, redirect, url_for
+import datetime
+import calendar
+from collections import defaultdict
+import sqlite3
+
+# ... (get_db_connection remains the same)
+
+# 💥 CHANGE: Add optional year and month parameters to the route 💥
+@calendar_bp.route('/calendar', defaults={'year': None, 'month': None})
+@calendar_bp.route('/calendar/<int:year>/<int:month>')
+def calendar_view(year, month):
     conn = get_db_connection()
     dates_with_entries = conn.execute('SELECT DISTINCT SUBSTR(timestamp, 1, 10) FROM entries').fetchall()
     dates_with_entries = {row[0] for row in dates_with_entries}
     conn.close()
     
-    today = datetime.date.today()
+    # Determine the month to display
+    if year is None or month is None:
+        target_date = datetime.date.today()
+    else:
+        try:
+            target_date = datetime.date(year, month, 1)
+        except ValueError:
+            # Fallback if an invalid date is provided (e.g., month=13)
+            target_date = datetime.date.today()
+            
+    # Calculate previous and next month/year
+    first_day_of_month = target_date.replace(day=1)
+    
+    # Calculate Previous Month
+    prev_month_date = first_day_of_month - datetime.timedelta(days=1)
+    prev_year = prev_month_date.year
+    prev_month = prev_month_date.month
+    
+    # Calculate Next Month (Add 32 days, then set to the 1st of that month)
+    next_month_date = first_day_of_month + datetime.timedelta(days=32)
+    next_month_date = next_month_date.replace(day=1)
+    next_year = next_month_date.year
+    next_month = next_month_date.month
+
+    
+    # Generate calendar data for the target month
     cal = calendar.Calendar(firstweekday=calendar.MONDAY)
-    current_month_days = cal.monthdayscalendar(today.year, today.month)
-    month_name = today.strftime('%B')
+    current_month_days = cal.monthdayscalendar(target_date.year, target_date.month)
+    month_name = target_date.strftime('%B')
     
     month_data = []
     for week in current_month_days:
@@ -33,13 +70,22 @@ def calendar_view():
             if day == 0:
                 week_data.append(None)
             else:
-                current_date = f"{today.year:04d}-{today.month:02d}-{day:02d}"
+                # Use the target month/year for date construction
+                current_date = f"{target_date.year:04d}-{target_date.month:02d}-{day:02d}"
                 has_entry = current_date in dates_with_entries
                 week_data.append({'day': day, 'date': current_date, 'has_entry': has_entry})
         month_data.append(week_data)
         
-    # Note: url_for in the template will now need to use 'calendar_bp.view_day'
-    return render_template('calendar.html', month=month_name, year=today.year, month_data=month_data)
+    return render_template('calendar.html', 
+                           month=month_name, 
+                           year=target_date.year, 
+                           month_data=month_data,
+                           
+                           # Pass navigation data to the template
+                           prev_year=prev_year,
+                           prev_month=prev_month,
+                           next_year=next_year,
+                           next_month=next_month)
 
 @calendar_bp.route('/day/<date>', methods=('GET', 'POST'))
 def view_day(date):

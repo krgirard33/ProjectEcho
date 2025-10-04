@@ -1,24 +1,49 @@
 {% extends "base.html" %}
 
+{% block title %}Calendar View{% endblock %}
+
 {% block content %}
-<h2 class="calendar-header">{{ month }} {{ year }}</h2>
-<div class="calendar">
-    <div class="calendar-header-row">
-        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
-    </div>
-    {% for week in month_data %}
-    <div class="calendar-week">
-        {% for day_info in week %}
-        {% if day_info %}
-        <a href="{{ url_for('calendar_bp.view_day', date=day_info.date) }}" class="calendar-day {% if day_info.has_entry %}has-entry{% endif %}">
-            {{ day_info.day }}
-        </a>
-        {% else %}
-        <div class="calendar-day empty"></div>
-        {% endif %}
-        {% endfor %}
-    </div>
-    {% endfor %}
+<div class="calendar-header">
+    <a href="{{ url_for('calendar_bp.calendar_view', year=prev_year, month=prev_month) }}"
+       class="nav-button">
+        &lt; Previous
+    </a>
+
+    <h1>{{ month }} {{ year }}</h1>
+
+    <a href="{{ url_for('calendar_bp.calendar_view', year=next_year, month=next_month) }}"
+       class="nav-button">
+        Next &gt;
+    </a>
 </div>
-<p class="instruction-text">Click on a date to view its entries.</p>
+
+<table class="calendar-table">
+    <thead>
+        <tr>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th>Sun</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for week in month_data %}
+        <tr>
+            {% for day_info in week %}
+            <td class="calendar-cell">
+                {% if day_info %}
+                <a href="{{ url_for('calendar_bp.view_day', date=day_info.date) }}"
+                   class="calendar-day {% if day_info.has_entry %}has-entry{% endif %}">
+                    {{ day_info.day }}
+                </a>
+                {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
