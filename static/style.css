@@ -33,8 +33,50 @@ body {
 }
 
 /* Calendar Styles */
+.calendar-table {
+    /* Set a fixed layout for better column control */
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse; /* Ensure cells touch */
+}
+
+.calendar-table th {
+    padding: 10px 0;
+    font-weight: normal;
+    background-color: #f7f7f7;
+}
+
+.calendar-cell {
+    /* Increase height/padding for more vertical space */
+    padding: 10px 0;
+    text-align: center;
+    /* Optional: Add a subtle border for clear cell separation */
+    border: 1px solid #f0f0f0;
+}
+
 .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
+}
+
+.calendar-header h1 {
+    font-size: 1.8em;
+    margin: 0;
+}
+
+.calendar-header .nav-button {
+    text-decoration: none;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.calendar-header .nav-button:hover {
+    background-color: #eee;
 }
 
 .calendar {
@@ -50,35 +92,42 @@ body {
     text-align: center;
 }
 
-    .calendar-header-row > div {
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
-    }
+.calendar-header-row > div {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
 
 .calendar-week {
     display: contents;
 }
 
 .calendar-day {
-    text-align: center;
-    padding: 15px 5px;
-    border: 1px solid #eee;
+    font-size: 1.2em;
+    display: inline-block;
+    width: 30px; 
+    height: 30px;
+    line-height: 30px; 
     text-decoration: none;
+    font-weight: bold;
     color: #333;
+    border-radius: 5px; 
+    transition: background-color 0.2s;
 }
 
-    .calendar-day:hover {
-        background-color: #f0f0f0;
-    }
+.calendar-day:hover {
+    background-color: #ddd;
+}
 
-    .calendar-day.empty {
-        background-color: #f9f9f9;
-        border-color: #f9f9f9;
-    }
+.calendar-day.empty {
+    background-color: #f9f9f9;
+    border-color: #f9f9f9;
+}
 
-    .calendar-day.has-entry {
-        background-color: #FFFFED;
-    }
+.calendar-day.has-entry {
+    background-color: #e6ffe6; /* Light green background */
+    border: 1px solid #4CAF50;
+    color: #4CAF50;
+}
 
 .back-link {
     display: block;
