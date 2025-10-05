@@ -1,0 +1,122 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Project Echo User Guide{% endblock %}
+
+{% block content %}
+
+<h1>Project Echo: User Guide</h1>
+<p>Project Echo is a simple web-based application designed to help you quickly log activities, track projects, and manage your to-do list.</p>
+
+<div class="guide-section">
+    <h2>1. Home Page (Journal Log)</h2>
+    <p>The main page (<a href="{{ url_for('index') }}">/</a>) is your dashboard for logging new entries and reviewing recent activity.</p>
+
+    <h3>New Entry Fields</h3>
+    <table class="guide-table">
+        <tr>
+            <th>Element</th>
+            <th>Purpose</th>
+        </tr>
+        <tr>
+            <td><strong>Project (Input)</strong></td>
+            <td>Organizes your entry. Optional.</td>
+        </tr>
+        <tr>
+            <td><strong>Text Area</strong></td>
+            <td>Logs your activity and thoughts.</td>
+        </tr>
+    </table>
+
+    <h3>Past Entries (Last 14 Days)</h3>
+    <table class="guide-table">
+        <tr>
+            <th>Element</th>
+            <th>Action</th>
+            <th>Result</th>
+        </tr>
+        <tr>
+            <td><strong>Date Header (e.g., 2025-10-05)</strong></td>
+            <td>Click on the date.</td>
+            <td>The entries for that day will <strong>toggle</strong> (show/hide).</td>
+        </tr>
+        <tr>
+            <td><strong>Entry Link</strong></td>
+            <td>Click on the entry content.</td>
+            <td>Takes you to the <strong>Edit</strong> page for that specific entry.</td>
+        </tr>
+    </table>
+
+    <h3>Formatting Entries (Markdown-like Syntax)</h3>
+    <table class="guide-table">
+        <tr>
+            <th>Syntax</th>
+            <th>Example Input</th>
+            <th>Result in Display</th>
+        </tr>
+        <tr>
+            <td><strong>New Line</strong></td>
+            <td><code>Line 1.\nLine 2.</code><br /><br /><code>Line 1.</code><br /><code>Line 2 also works.</code></td>
+            <td>Renders on two separate lines.</td>
+        </tr>
+        <tr><td><strong>Unordered List</strong></td>
+            <td><code>* Item A\n* Item B</code><br /><br /><code>* Line 1.</code><br /><code>* Line 2 also works.</code></td>
+            <td>Creates a standard bulleted (<code>&lt;ul&gt;</code>) list.</td>
+        </tr>
+        <tr>
+            <td><strong>Ordered List</strong></td>
+            <td><code># Step 1\n# Step 2</code><br /><br /><code># Line 1.</code><br /><code># Line 2 also works.</code></td>
+            <td>Creates a numbered (<code>&lt;ol&gt;</code>) list.</td>
+        </tr>
+    </table>
+</div>
+
+<div class="guide-section">
+    <h2>2. Calendar View</h2>
+    <p>The Calendar view (<a href="{{ url_for('calendar_bp.calendar_view') }}">/calendar</a>) lets you navigate months and review your journal entries by day.</p>
+
+    <table class="guide-table">
+        <tr>
+            <th>Element</th>
+            <th>Action</th><th>Result</th>
+        </tr>
+        <tr>
+            <td><strong>&lt; Previous / Next &gt;</strong></td>
+            <td>Click the navigation buttons.</td>
+            <td>Changes the displayed month and year.</td>
+        </tr>
+        <tr>
+            <td><strong>Day Number</strong></td>
+            <td>Click a day number.</td>
+            <td>Takes you to the <strong>Day View</strong> (green highlight indicates entries exist).</td>
+        </tr>
+    </table>
+
+    <h3>Editing Entries</h3>
+    <p>In Day View, clicking any entry takes you to the **Edit Entry** page where you can modify the <strong>Project</strong> and <strong>Entry Content</strong> fields.</p>
+</div>
+
+<div class="guide-section">
+    <h2>3. To-Do List</h2>
+    <p>The To-Do List page (<a href="{{ url_for('todo_bp.todo') }}">/todo</a>) is for managing your tasks, organized by **Project**.</p>
+
+    <h3>Task Management</h3>
+    <table class="guide-table">
+        <tr>
+            <th>Section</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td><strong>Active Tasks</strong></td>
+            <td>Tasks with status: <em>backlog</em>, <em>holding</em>, or <em>started</em>. Grouped by project.</td>
+            <td>Click <strong>✏️</strong> to edit priority, dates, or mark as *finished*.</td>
+        </tr>
+        <tr>
+            <td><strong>Done Tasks</strong></td>
+            <td>Tasks with status: <em>finished</em>. Grouped by project and crossed out.</td>
+            <td>Click <strong>✏️</strong> to view details or change status back to active.</td>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}
