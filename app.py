@@ -5,6 +5,8 @@ from collections import defaultdict
 import webbrowser
 import threading
 import os
+from markupsafe import Markup, escape
+
 # Import the blueprints
 from calendar_app import calendar_bp 
 from todo import todo_bp 
@@ -49,12 +51,88 @@ def init_db():
     ''')
     conn.close()
 
+# Jinja Filter for Entry Formatting
+def format_entry_content(content):
+    # Converts newline characters to <br>, and handles simple markdown for lists.
+    if not content:
+        return ""
+
+    lines = content.split('\n')
+    html_lines = []
+    
+    in_ul = False
+    in_ol = False
+
+    for line in lines:
+        stripped_line = line.strip()
+
+        # Unordered List (*)
+        if stripped_line.startswith('* '):
+            if not in_ul:
+                html_lines.append('<ul class="entry-list">')
+                in_ul = True
+            
+            # Close ordered list if transitioning
+            if in_ol:
+                html_lines.append('</ol>')
+                in_ol = False
+                
+            item_content = stripped_line[2:].strip()
+            html_lines.append(f'<li>{escape(item_content)}</li>') 
+            continue
+
+        # Ordered List (#)
+        elif stripped_line.startswith('# '):
+            if not in_ol:
+                html_lines.append('<ol class="entry-list">')
+                in_ol = True
+            
+            # Close unordered list if transitioning
+            if in_ul:
+                html_lines.append('</ul>')
+                in_ul = False
+                
+            item_content = stripped_line[2:].strip()
+            html_lines.append(f'<li>{escape(item_content)}</li>')
+            continue
+
+        # Regular Text (Newlines and Paragraphs)
+        else:
+            # Close any open list
+            if in_ul:
+                html_lines.append('</ul>')
+                in_ul = False
+            if in_ol:
+                html_lines.append('</ol>')
+                in_ol = False
+
+            # Convert simple text lines to paragraphs or <br> (for multiline text)
+            if stripped_line:
+                # Use <p> for blocks of text or simply <br> for line breaks
+                escaped_line = escape(line)
+                html_lines.append(f'{escaped_line}<br>')
+            else:
+                # Add an extra <br> for an empty line (paragraph break)
+                html_lines.append('<br>')
+
+
+    # Close any list that might still be open at the end of the entry
+    if in_ul:
+        html_lines.append('</ul>')
+    if in_ol:
+        html_lines.append('</ol>')
+
+    # Join lines and return, ensuring we use Markup to tell Jinja it's safe HTML
+    from markupsafe import Markup
+    return Markup(''.join(html_lines).strip('<br>'))
+
 init_db()
 # -----------------------------------------------------------------------------------
 
 # Register Blueprints
 app.register_blueprint(calendar_bp)
 app.register_blueprint(todo_bp)
+app.jinja_env.filters['format_entry'] = format_entry_content
 
 
 @app.route('/', methods=('GET', 'POST'))

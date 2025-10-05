@@ -16,7 +16,13 @@
     {% for entry in entries %}
     <div class="entry">
         <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}">
-            <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span> - {{ entry.content }}
+            <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span>
+            {% if entry.project %}
+            <span class="entry-project">[{{ entry.project }}]</span>
+            {% endif %}
+
+            - {{ entry.content | format_entry | safe }}
+
             {% if entry.time_elapsed %}
             <span class="time-elapsed">({{ entry.time_elapsed }})</span>
             {% endif %}
