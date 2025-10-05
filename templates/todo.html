@@ -36,10 +36,15 @@
                     <a href="{{ url_for('todo_bp.edit_todo', item_id=item.id) }}" class="edit-link">✏️</a>
                     <span class="item-text">{{ item.item }}</span>
                     <span class="priority priority-{{ item.priority }}">{{ item.priority }}</span>
+                    
                 </div>
                 <div class="item-dates">
-                    {% if item.start_date %}<span>Start: {{ item.start_date }}</span>{% endif %}
-                    {% if item.due_date %}<span>Due: {{ item.due_date }}</span>{% endif %}
+                    {% if item.start_date %}
+                    <span class="start-date-tag">Start: {{ item.start_date }}</span>
+                    {% endif %}
+                    {% if item.due_date %}
+                    <span class="due-date-tag">Due: {{ item.due_date }}</span>
+                    {% endif %}
                     <span class="status-badge status-{{ item.status }}">{{ item.status | capitalize }}</span>
                 </div>
             </li>
