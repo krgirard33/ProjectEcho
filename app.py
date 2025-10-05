@@ -179,6 +179,10 @@ def index():
         
     return render_template('index.html', entries_by_date=reversed(entries_by_date.items()))
 
+@app.route('/userguide')
+def instructions():
+    return render_template('userguide.html')
+
 
 if __name__ == '__main__':
     if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':

@@ -1,6 +1,21 @@
-﻿/* Menu Styles */
+﻿/* --- 1. GLOBAL LAYOUT --- */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FEF7DE;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* --- 2. NAVIGATION/MENU STYLES --- */
 .main-header {
-    background-color: #f9f9f9;
+    background-color: #E9F5DB;
     border-bottom: 1px solid #ddd;
     padding: 10px 0;
     margin-bottom: 20px;
@@ -12,48 +27,44 @@
 
     .main-header a {
         text-decoration: none;
-        color: #555;
+        color: #87986A;
         margin: 0 15px;
         font-weight: bold;
     }
 
         .main-header a:hover {
-            color: #333;
+            color: #718355;
         }
 
-/* General Layout */
-body {
-    font-family: sans-serif;
+/* --- 3. FORM INPUTS & BUTTONS --- */
+/* Base styling for common form elements */
+.project-input,
+.todo-form-container input,
+.todo-form-container select,
+.todo-form-container button,
+textarea {
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; 
 }
 
-.container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
+/* Specific form adjustments */
+.journal-entry-form {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-/* Calendar Styles */
-.calendar-table {
-    /* Set a fixed layout for better column control */
-    table-layout: fixed;
+.project-input {
+    margin-bottom: 5px;
+    width: 98%;
+}
+
+textarea {
     width: 100%;
-    border-collapse: collapse; /* Ensure cells touch */
 }
 
-.calendar-table th {
-    padding: 10px 0;
-    font-weight: normal;
-    background-color: #f7f7f7;
-}
-
-.calendar-cell {
-    /* Increase height/padding for more vertical space */
-    padding: 10px 0;
-    text-align: center;
-    /* Optional: Add a subtle border for clear cell separation */
-    border: 1px solid #f0f0f0;
-}
-
+/* --- 4. CALENDAR STYLES --- */
 .calendar-header {
     display: flex;
     justify-content: space-between;
@@ -61,100 +72,88 @@ body {
     margin-bottom: 20px;
 }
 
-.calendar-header h1 {
-    font-size: 1.8em;
-    margin: 0;
+    .calendar-header h1 {
+        font-size: 1.8em;
+        margin: 0;
+    }
+
+    .calendar-header .nav-button {
+        text-decoration: none;
+        padding: 8px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        color: #333;
+        transition: background-color 0.2s;
+    }
+
+        .calendar-header .nav-button:hover {
+            background-color: #eee;
+        }
+
+.calendar-table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.calendar-header .nav-button {
-    text-decoration: none;
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: #333;
-    transition: background-color 0.2s;
-}
+    .calendar-table th {
+        padding: 10px 0;
+        font-weight: normal;
+        background-color: #E9F5DB;
+    }
 
-.calendar-header .nav-button:hover {
-    background-color: #eee;
-}
-
-.calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.calendar-header-row {
-    display: contents;
-    font-weight: bold;
+.calendar-cell {
+    padding: 10px 0;
     text-align: center;
-}
-
-.calendar-header-row > div {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-.calendar-week {
-    display: contents;
+    border: 1px solid #f0f0f0;
 }
 
 .calendar-day {
     font-size: 1.2em;
     display: inline-block;
-    width: 30px; 
+    width: 30px;
     height: 30px;
-    line-height: 30px; 
+    line-height: 30px;
     text-decoration: none;
     font-weight: bold;
     color: #333;
-    border-radius: 5px; 
+    border-radius: 5px;
     transition: background-color 0.2s;
 }
 
-.calendar-day:hover {
-    background-color: #ddd;
+    .calendar-day:hover {
+        background-color: #B5C99A;
+    }
+
+    .calendar-day.has-entry {
+        background-color: #718355;
+        border: 1px solid #E9F5DB;
+        color: #E9F5DB;
+    }
+
+/* --- 5. JOURNAL ENTRY STYLES (INDEX PAGE) --- */
+.date-section {
+    padding-bottom: 15px;
+    margin-bottom: 25px;
 }
 
-.calendar-day.empty {
-    background-color: #f9f9f9;
-    border-color: #f9f9f9;
+.date-header {
+    cursor: pointer;
+    background-color: #E9F5DB;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    user-select: none;
+    transition: background-color 0.1s;
 }
 
-.calendar-day.has-entry {
-    background-color: #e6ffe6; /* Light green background */
-    border: 1px solid #4CAF50;
-    color: #4CAF50;
-}
+    .date-header:hover {
+        background-color: #B5C99A;
+    }
 
-.back-link {
-    display: block;
-    margin-bottom: 20px;
-    text-decoration: none;
-    color: #555;
-}
-
-.instruction-text {
-    text-align: center;
-    margin-top: 20px;
-    color: #888;
-}
-
-/* Existing Styles */
-.journal-entry-form {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-textarea {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.entry {
-    margin-bottom: 10px;
+/* Toggling visibility classes */
+.entries-content-wrapper.hidden {
+    display: none;
 }
 
 .entry a {
@@ -165,11 +164,11 @@ textarea {
     border: 1px solid transparent;
 }
 
-.entry a:hover {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+    .entry a:hover {
+        background-color: #E9F5DB;
+        border: 1px solid #B5C99A;
+        border-radius: 5px;
+    }
 
 .timestamp {
     font-weight: bold;
@@ -182,34 +181,14 @@ textarea {
     font-size: 0.9em;
     margin-left: 10px;
 }
-.date-section {
-    padding-bottom: 15px;
-    margin-bottom: 25px;
+
+.entry-project {
+    font-weight: bold;
+    color: #718355;
+    margin-right: 5px;
 }
 
-.date-header {
-    cursor: pointer;
-    background-color: #f5f5f5;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 4px;
-    user-select: none;
-    transition: background-color 0.1s;
-}
-
-.date-header:hover {
-    background-color: #eee;
-}
-
-.entries-content-wrapper.hidden {
-    display: none;
-}
-
-.hidden {
-    display: none;
-}
-
-/* To-Do List Styles */
+/* --- 6. TO-DO LIST STYLES --- */
 .todo-form-container {
     margin-bottom: 20px;
     padding: 15px;
@@ -220,20 +199,12 @@ textarea {
     gap: 10px;
 }
 
-    .todo-form-container input,
-    .todo-form-container select,
-    .todo-form-container button {
-        padding: 8px;
-        border-radius: 3px;
-        border: 1px solid #ccc;
-    }
-
 .todo-list-container {
     margin-top: 20px;
 }
 
 .project-section h3 {
-    background-color: #f0f0f0;
+    background-color: #E9F5DB;
     padding: 10px;
     border-radius: 5px;
 }
@@ -244,37 +215,7 @@ textarea {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #eee;
-    background-color: white; /* Ensure active items are visible */
-}
-
-.item-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.priority {
-    font-size: 0.8em;
-    padding: 3px 6px;
-    border-radius: 3px;
-    color: white;
-}
-
-.priority-low {
-    background-color: #28a745;
-}
-
-.priority-medium {
-    background-color: #ffc107;
-}
-
-.priority-high {
-    background-color: #dc3545;
-}
-
-.status-finished .item-text {
-    text-decoration: line-through;
-    color: #888;
+    background-color: white;
 }
 
 .item-details {
@@ -283,13 +224,56 @@ textarea {
     gap: 10px;
 }
 
+/* Priority Badges */
+.priority {
+    font-size: 0.8em;
+    padding: 3px 6px;
+    border-radius: 3px;
+    color: white;
+}
+
+.priority-low {
+    background-color: #B5C99A;
+}
+
+.priority-medium {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.priority-high {
+    background-color: #dc3545;
+}
+
+/* Status Badges */
+.status-badge {
+    font-size: 0.8em;
+    padding: 3px 6px;
+    border-radius: 3px;
+    color: white;
+    margin-left: 10px;
+}
+
+.status-backlog {
+    background-color: #87986A;
+}
+
+.status-holding {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.status-started {
+    background-color: #85C41A;
+}
+
 .edit-link {
     text-decoration: none;
     font-size: 1.2em;
     color: #999;
 }
 
-/* FINISHED ITEM STYLES */
+/* --- 7. FINISHED TASK STYLES --- */
 .finished-list-container {
     margin-top: 40px;
     border-top: 2px solid #ccc;
@@ -304,7 +288,7 @@ textarea {
 }
 
 .finished-item {
-    background-color: #f7f7f7;
+    background-color: #E9F5DB;
 }
 
     .finished-item .item-text {
@@ -314,48 +298,12 @@ textarea {
 
 .finished-tag {
     font-style: italic;
-    color: #4CAF50; /* Green color */
+    color: #718355;
     font-size: 0.9em;
 }
 
-/* Status Badges for Active Items (Optional, but looks cleaner) */
-.status-badge {
-    font-size: 0.8em;
-    padding: 3px 6px;
-    border-radius: 3px;
-    color: white;
-    margin-left: 10px;
-}
-
-.status-backlog {
-    background-color: #6c757d;
-}
-
-.status-holding {
-    background-color: #ffc107;
-    color: #333;
-}
-
-.status-started {
-    background-color: #007bff;
-}
-
-/* Style for Project tag on entries */
-.entry-project {
-    font-weight: bold;
-    color: #4CAF50; /* A distinct color like green */
-    margin-right: 5px;
-}
-
-.project-input {
-    margin-bottom: 5px;
-    padding: 8px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    width: 98%; /* Match textarea width */
-}
-/* Edit Form */
-edit-form-container label {
+/* --- 8. EDIT FORM STYLES --- */
+.edit-form-container label {
     display: block;
     margin-top: 10px;
     font-weight: bold;
@@ -369,3 +317,34 @@ edit-form-container label {
     box-sizing: border-box;
     margin-bottom: 10px;
 }
+
+/* --- 9. USER GUIDE STYLES --- */
+.guide-section {
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+    .guide-section h2 {
+        border-bottom: 2px solid #ccc;
+        padding: 5px;
+        margin-top: 0;
+        background-color: #E9F5DB;
+    }
+
+.guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 0.95em;
+}
+
+    .guide-table th, .guide-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .guide-table th {
+        background-color: #E9F5DB;
+    }
