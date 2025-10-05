@@ -69,8 +69,15 @@ def index():
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
+
+    # Get entries from the last 14 days
+    fourteen_days_ago = datetime.datetime.now() - datetime.timedelta(days=14)
+    cutoff_timestamp = fourteen_days_ago.strftime('%Y-%m-%d %H:%M:%S')
     
-    entries = conn.execute('SELECT * FROM entries ORDER BY timestamp ASC').fetchall()
+    entries = conn.execute(
+        'SELECT * FROM entries WHERE timestamp >= ? ORDER BY timestamp ASC',
+        (cutoff_timestamp,)
+    ).fetchall()
     conn.close()
 
     entries_by_date = defaultdict(list)

@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const dateHeaders = document.querySelectorAll('.date-section .date-header');
-
-    dateHeaders.forEach(header => {
+    document.querySelectorAll('.date-header').forEach(header => {
+        header.style.cursor = 'pointer'; // Indicate it's clickable
         header.addEventListener('click', function () {
-            const list = this.nextElementSibling;
-            list.classList.toggle('hidden');
+            const targetId = this.getAttribute('data-target');
+            const targetElement = document.getElementById(targetId);
+
+            if (targetElement) {
+                // Toggle the 'hidden' class
+                targetElement.classList.toggle('hidden');
+            }
         });
     });
 });
