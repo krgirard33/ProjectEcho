@@ -120,7 +120,7 @@ def view_day(date):
 
     entries_with_time.reverse()
 
-    return render_template('day_view.html', entries=entries_with_time, date=date)
+    return render_template('day_view.html', entries=reversed(entries_with_time), date=date)
 
 @calendar_bp.route('/edit/<int:entry_id>', methods=('GET', 'POST'))
 def edit(entry_id):

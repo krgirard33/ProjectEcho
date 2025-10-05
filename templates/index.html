@@ -26,7 +26,7 @@
                         {% if entry.project %}
                         <span class="entry-project">[{{ entry.project }}]</span>
                         {% endif %}
-                        - {{ entry.content }}
+                        - {{ entry.content | format_entry | safe }}
                         {% if entry.time_elapsed %}
                         <span class="time-elapsed">({{ entry.time_elapsed }})</span>
                         {% endif %}
@@ -38,5 +38,4 @@
     </div>
     {% endfor %}
 </div>
-
 {% endblock %}
