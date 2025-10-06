@@ -156,12 +156,19 @@ textarea {
     display: none;
 }
 
+.entries-list-container h2 {
+    background-color: #85C41A;
+    display: block;
+    padding: 5px;
+}
+
 .entry a {
     text-decoration: none;
     color: #333;
     display: block;
     padding: 5px;
-    border: 1px solid transparent;
+    border: 1px solid #B5C99A;
+    border-radius: 5px;
 }
 
     .entry a:hover {
@@ -183,6 +190,34 @@ textarea {
 }
 
 .entry-project {
+    font-weight: bold;
+    color: #718355;
+    margin-right: 5px;
+}
+
+/* Finished Tasks Section */
+.finished-tasks-section h2 {
+    background-color: #85C41A;
+    display: block;
+    padding: 5px;
+}
+
+.finished-todo-item a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 5px;
+    border: 1px solid #B5C99A;
+    border-radius: 5px;
+}
+
+    .finished-todo-item a:hover {
+        background-color: #E9F5DB;
+        border: 1px solid #B5C99A;
+        border-radius: 5px;
+    }
+
+.finished-task-project {
     font-weight: bold;
     color: #718355;
     margin-right: 5px;

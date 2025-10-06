@@ -13,6 +13,7 @@
 </div>
 
 <div class="entries-list-container">
+    <h2>Journal Entries</h2>
     {% for entry in entries %}
     <div class="entry">
         <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}">
@@ -29,5 +30,24 @@
         </a>
     </div>
     {% endfor %}
+</div>
+<div class="finished-tasks-section">
+    <h2>Finished Tasks</h2>
+    {% if finished_todos %}
+    <ul class="finished-tasks-list" style="list-style-type: none; padding: 0;">
+        {% for todo in finished_todos %}
+        <li class="finished-todo-item">
+            <a href="{{ url_for('todo_bp.edit_todo', item_id=todo.id) }}">
+                {% if todo.project %}
+                <span class="finished-task-project">({{ todo.project }}): </span>
+                {% endif %}
+                <span class="finished-task-text">{{ todo.item }}</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="no-tasks-message">No tasks were marked finished on this day.</p>
+    {% endif %}
 </div>
 {% endblock %}
