@@ -22,9 +22,6 @@ import calendar
 from collections import defaultdict
 import sqlite3
 
-# ... (get_db_connection remains the same)
-
-# 💥 CHANGE: Add optional year and month parameters to the route 💥
 @calendar_bp.route('/calendar', defaults={'year': None, 'month': None})
 @calendar_bp.route('/calendar/<int:year>/<int:month>')
 def calendar_view(year, month):
@@ -96,10 +93,19 @@ def view_day(date):
         conn.execute('INSERT INTO entries (timestamp, content) VALUES (?, ?)',
                      (timestamp, content))
         conn.commit()
+
         conn.close()
         return redirect(url_for('calendar_bp.view_day', date=date))
     
+    # Fetch Journal Entries
     entries = conn.execute('SELECT * FROM entries WHERE SUBSTR(timestamp, 1, 10) = ? ORDER BY timestamp ASC', (date,)).fetchall()
+    
+    # Fetch Finished To-Do Items
+    finished_todos = conn.execute(
+        'SELECT * FROM todos WHERE finished_date = ? AND status = "finished" ORDER BY item ASC',
+        (date,)
+    ).fetchall()
+
     conn.close()
 
     entries_with_time = []
@@ -120,7 +126,7 @@ def view_day(date):
 
     entries_with_time.reverse()
 
-    return render_template('day_view.html', entries=reversed(entries_with_time), date=date)
+    return render_template('day_view.html', entries=reversed(entries_with_time), finished_todos=finished_todos, date=date)
 
 @calendar_bp.route('/edit/<int:entry_id>', methods=('GET', 'POST'))
 def edit(entry_id):
