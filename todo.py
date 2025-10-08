@@ -114,10 +114,15 @@ def edit_todo(item_id):
         conn.close()
         return redirect(url_for('todo_bp.todo'))
         
+    # Fetch active project names 
+    project_rows = conn.execute('SELECT name FROM projects WHERE is_active = 1 ORDER BY name ASC').fetchall()
+    active_projects = [row['name'] for row in project_rows]
+
+    # Fetch specific todo
     todo_item = conn.execute('SELECT * FROM todos WHERE id = ?', (item_id,)).fetchone()
     conn.close()
     
     if todo_item is None:
         return "Todo item not found.", 404
         
-    return render_template('edit_todo.html', item=todo_item)
+    return render_template('edit_todo.html', item=todo_item, active_projects=active_projects)

@@ -9,7 +9,13 @@
     <form method="post" action="{{ url_for('todo_bp.edit_todo', item_id=item.id) }}">
 
         <label for="project">Project:</label>
-        <input type="text" id="project" name="project" value="{{ item.project }}" required>
+        <select name="project" id="project" class="project-input-edit" required>
+            {% for project_name in active_projects %}
+            <option value="{{ project_name }}" {% if project_name == item.project %}selected{% endif %}>
+                {{ project_name }}
+            </option>
+            {% endfor %}
+        </select>
 
         <label for="item">Task Item:</label>
         <input type="text" id="item" name="item" value="{{ item.item }}" required>

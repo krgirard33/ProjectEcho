@@ -5,8 +5,15 @@
 {% block content %}
 <h1>Entries for {{ date }}</h1>
 <div class="journal-entry-form">
-    <form method="post">
-        <textarea name="content" rows="4" placeholder="What just happened? What's next?"></textarea>
+    <form method="post" action="{{ url_for('calendar_bp.view_day', date=date) }}" class="journal-entry-form">
+        <select name="project" class="project-input" aria-label="Select Project (Optional)">
+            <option value="">-- Select Project (Optional) --</option>
+            {% for project_name in active_projects %}
+            <option value="{{ project_name }}">{{ project_name }}</option>
+            {% endfor %}
+        </select>
+
+        <textarea name="content" rows="4" cols="50" placeholder="What just happened? What's next?"></textarea>
         <br>
         <button type="submit">Log Entry</button>
     </form>

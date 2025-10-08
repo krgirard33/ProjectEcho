@@ -106,6 +106,10 @@ def view_day(date):
         (date,)
     ).fetchall()
 
+    # Fetch active project names
+    project_rows = conn.execute('SELECT name FROM projects WHERE is_active = 1 ORDER BY name ASC').fetchall()
+    active_projects = [row['name'] for row in project_rows]
+
     conn.close()
 
     entries_with_time = []
@@ -126,7 +130,7 @@ def view_day(date):
 
     entries_with_time.reverse()
 
-    return render_template('day_view.html', entries=reversed(entries_with_time), finished_todos=finished_todos, date=date)
+    return render_template('day_view.html', entries=reversed(entries_with_time), finished_todos=finished_todos, date=date, active_projects=active_projects)
 
 @calendar_bp.route('/edit/<int:entry_id>', methods=('GET', 'POST'))
 def edit(entry_id):
@@ -141,10 +145,15 @@ def edit(entry_id):
         return redirect(url_for('calendar_bp.view_day', date=original_date))
         
     entry = conn.execute('SELECT * FROM entries WHERE id = ?', (entry_id,)).fetchone()
+
+    # Fetch active project names
+    project_rows = conn.execute('SELECT name FROM projects WHERE is_active = 1 ORDER BY name ASC').fetchall()
+    active_projects = [row['name'] for row in project_rows]
+
     conn.close()
     
     if entry is None:
         return "Entry not found.", 404
     
     original_date = entry['timestamp'].split(' ')[0]
-    return render_template('edit.html', entry=entry, original_date=original_date)
+    return render_template('edit.html', entry=entry, original_date=original_date, active_projects=active_projects)
