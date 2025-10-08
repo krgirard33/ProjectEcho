@@ -3,6 +3,8 @@ from collections import defaultdict
 import sqlite3
 import datetime
 
+from projects_bp import projects_bp
+
 # Define the Blueprint. The URL prefix will be '/todo'
 todo_bp = Blueprint('todo_bp', __name__, url_prefix='/todo')
 
@@ -29,6 +31,12 @@ def todo():
         conn.execute('INSERT INTO todos (project, item, start_date, due_date, finished_date, priority, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
                      (project, item, start_date, due_date, finished_date, priority, status))
         conn.commit()
+
+
+    # Fetch all active projects for the dropdown
+    project_rows = conn.execute('SELECT name FROM projects WHERE is_active = 1 ORDER BY name ASC').fetchall()
+    active_projects = [row['name'] for row in project_rows]
+
         
     # Calculate the cutoff date (31 days ago)
     thirty_one_days_ago = datetime.date.today() - datetime.timedelta(days=31)
@@ -68,7 +76,9 @@ def todo():
         
     return render_template('todo.html', 
                            active_todos_by_project=active_todos_by_project, 
-                           finished_todos_by_project=sorted_finished_projects)  
+                           finished_todos_by_project=sorted_finished_projects,
+                           active_projects=active_projects
+                           )  
         
 # Editing Todos
 @todo_bp.route('/edit/<int:item_id>', methods=('GET', 'POST'))

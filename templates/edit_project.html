@@ -1,0 +1,21 @@
+﻿{% extends "base.html" %}
+{% block title %}Edit {{ project.name }}{% endblock %}
+
+{% block content %}
+<h1>Edit Project: {{ project.name }}</h1>
+
+<form method="post">
+    <label for="name">Project Name:</label>
+    <input type="text" id="name" name="name" value="{{ project.name }}" required class="project-input-edit"><br>
+
+    <label for="is_active">Status:</label>
+    <input type="checkbox" id="is_active" name="is_active" {% if project.is_active %}checked{% endif %}>
+    <label for="is_active" style="display: inline; font-weight: normal;">Active</label><br>
+
+    <button type="submit" style="margin-top: 20px;">Save Changes</button>
+</form>
+
+<p style="margin-top: 20px;">
+    <a href="{{ url_for('projects_bp.manage_projects') }}">← Back to Project List</a>
+</p>
+{% endblock %}

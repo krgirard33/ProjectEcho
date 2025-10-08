@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Manage Projects{% endblock %}
+
+{% block content %}
+<h1>Manage Projects</h1>
+
+<form method="post" action="{{ url_for('projects_bp.manage_projects') }}" style="margin-bottom: 30px;">
+    <input type="text" name="name" placeholder="New Project Name" required style="padding: 8px; width: 250px;">
+    <button type="submit">Add Project</button>
+</form>
+
+<table class="project-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+        <tr class="{% if not project.is_active %}inactive-row{% endif %}">
+            <td>{{ project.name }}</td>
+            <td>
+                <span class="status-badge status-{% if project.is_active %}active{% else %}inactive{% endif %}">
+                    {% if project.is_active %}Active{% else %}Inactive{% endif %}
+                </span>
+            </td>
+            <td>
+                <a href="{{ url_for('projects_bp.edit_project', id=project.id) }}" class="edit-link">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -3,7 +3,12 @@
 {% block content %}
 <h1>Project Echo</h1>
 <form method="post" action="{{ url_for('index') }}" class="journal-entry-form">
-    <input type="text" name="project" placeholder="Project" class="project-input">
+    <select name="project" class="project-input" aria-label="Select Project (Optional)">
+        <option value="">-- Select Project (Optional) --</option>
+        {% for project_name in active_projects %}
+        <option value="{{ project_name }}">{{ project_name }}</option>
+        {% endfor %}
+    </select>
     <textarea name="content" rows="4" cols="50" placeholder="What just happened? What's next?"></textarea>
     <br>
     <button type="submit">Log Entry</button>

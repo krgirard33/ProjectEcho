@@ -6,7 +6,12 @@
 <h1>Todo List</h1>
 <div class="todo-form-container">
     <form method="post" action="{{ url_for('todo_bp.todo') }}">
-        <input type="text" name="project" placeholder="Project" required>
+        <select name="project" class="project-input" required>
+            <option value="" disabled selected>-- Select Project --</option>
+            {% for project_name in active_projects %}
+            <option value="{{ project_name }}">{{ project_name }}</option>
+            {% endfor %}
+        </select>
         <input type="text" name="item" placeholder="Task Item" required>
         <input type="date" name="start_date" placeholder="Start Date">
         <input type="date" name="due_date" placeholder="Due Date">
