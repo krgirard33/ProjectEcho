@@ -8,7 +8,6 @@
 <div class="todo-form-container">
     <form method="post" action="{{ url_for('todo_bp.edit_todo', item_id=item.id) }}">
 
-        <label for="project">Project:</label>
         <select name="project" id="project" class="project-input-edit" required>
             {% for project_name in active_projects %}
             <option value="{{ project_name }}" {% if project_name == item.project %}selected{% endif %}>
@@ -17,13 +16,12 @@
             {% endfor %}
         </select>
 
-        <label for="item">Task Item:</label>
         <input type="text" id="item" name="item" value="{{ item.item }}" required>
 
-        <label for="start_date">Start Date:</label>
+        <label for="start_date">Start:</label>
         <input type="date" id="start_date" name="start_date" value="{{ item.start_date }}" placeholder="Start Date">
 
-        <label for="due_date">Due Date:</label>
+        <label for="due_date">Due:</label>
         <input type="date" id="due_date" name="due_date" value="{{ item.due_date }}" placeholder="Due Date">
 
         <label for="priority">Priority:</label>

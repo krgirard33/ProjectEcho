@@ -63,13 +63,24 @@ textarea {
     width: 98%;
 }
 
+.project-input-edit {
+    margin-bottom: 5px;
+    width: 98%;
+}
+
 textarea {
     width: 100%;
+}
+
+.todo-form-container #item {
+    margin-bottom: 5px;
+    width: 98%;
 }
 
 .todo-form-container button, .journal-entry-form button {
     background-color: black;
     color: antiquewhite;
+    margin-top: 5px;
 }
 
 /* --- 4. CALENDAR STYLES --- */

@@ -12,8 +12,10 @@
             <option value="{{ project_name }}">{{ project_name }}</option>
             {% endfor %}
         </select>
-        <input type="text" name="item" placeholder="Task Item" required>
+        <input type="text" id="item" name="item" placeholder="Task Item" required>
+        <label for="start_date">Start:</label>
         <input type="date" name="start_date" placeholder="Start Date">
+        <label for="due_date">Due:</label>
         <input type="date" name="due_date" placeholder="Due Date">
         <select name="priority">
             <option value="low">Low Priority</option>
