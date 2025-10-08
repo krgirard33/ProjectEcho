@@ -5,12 +5,16 @@
 {% block content %}
 <h1>Edit Journal Entry</h1>
 <div class="edit-form-container">
-    <form method="post" action="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}">
-
+    <form method="post">
         <label for="project">Project:</label>
-        <input type="text" id="project" name="project"
-               value="{{ entry.project if entry.project else '' }}"
-               placeholder="Project (Optional)" class="project-input-edit">
+        <select name="project" id="project" class="project-input-edit">
+            <option value="">-- None (Optional) --</option>
+            {% for project_name in active_projects %}
+            <option value="{{ project_name }}" {% if project_name == entry.project %}selected{% endif %}>
+                {{ project_name }}
+            </option>
+            {% endfor %}
+        </select>
 
         <label for="content">Entry Content:</label>
         <textarea name="content" id="content" rows="10" cols="50">{{ entry.content }}</textarea>
