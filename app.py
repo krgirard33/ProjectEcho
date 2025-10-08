@@ -10,6 +10,7 @@ from markupsafe import Markup, escape
 # Import the blueprints
 from calendar_app import calendar_bp 
 from todo import todo_bp 
+from projects_bp import projects_bp
 
 # Set the app up as a package
 app = Flask(__name__)
@@ -47,6 +48,14 @@ def init_db():
             finished_date TEXT,
             priority TEXT NOT NULL,
             status TEXT NOT NULL
+        );
+    ''')
+
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS projects (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            is_active BOOLEAN NOT NULL DEFAULT 1 -- 1 for active, 0 for inactive
         );
     ''')
     conn.close()
@@ -133,6 +142,7 @@ init_db()
 app.register_blueprint(calendar_bp)
 app.register_blueprint(todo_bp)
 app.jinja_env.filters['format_entry'] = format_entry_content
+app.register_blueprint(projects_bp)
 
 
 @app.route('/', methods=('GET', 'POST'))
@@ -147,6 +157,9 @@ def index():
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
+
+    # Get active projects for the dropdown
+    active_projects = get_active_projects()
 
     # Get entries from the last 14 days
     fourteen_days_ago = datetime.datetime.now() - datetime.timedelta(days=14)
@@ -177,12 +190,21 @@ def index():
         entries_by_date[date_part].append(entry_with_time)
         previous_timestamp = datetime.datetime.strptime(current_timestamp_str, '%Y-%m-%d %H:%M:%S')
         
-    return render_template('index.html', entries_by_date=reversed(entries_by_date.items()))
+    return render_template('index.html', entries_by_date=reversed(entries_by_date.items()), active_projects=active_projects)
 
 @app.route('/userguide')
 def instructions():
     return render_template('userguide.html')
 
+def get_active_projects():
+    conn = get_db_connection()
+    # Select only projects marked as active
+    projects = conn.execute(
+        'SELECT name FROM projects WHERE is_active = 1 ORDER BY name ASC'
+    ).fetchall()
+    conn.close()
+    # Return a list of project names
+    return [p['name'] for p in projects]
 
 if __name__ == '__main__':
     if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':

@@ -42,11 +42,14 @@ body {
 .todo-form-container input,
 .todo-form-container select,
 .todo-form-container button,
+.journal-entry-form button,
+.journal-entry-form input,
+.journal-entry-form select,
 textarea {
     padding: 8px;
-    border-radius: 3px;
+    border-radius: 12px;
     border: 1px solid #ccc;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 /* Specific form adjustments */
@@ -62,6 +65,11 @@ textarea {
 
 textarea {
     width: 100%;
+}
+
+.todo-form-container button, .journal-entry-form button {
+    background-color: black;
+    color: antiquewhite;
 }
 
 /* --- 4. CALENDAR STYLES --- */
@@ -399,3 +407,44 @@ textarea {
     .guide-table th {
         background-color: #E9F5DB;
     }
+
+/* --- 11. PROJECT MANAGEMENT STYLES (NEW SECTION) --- */
+.project-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    .project-table th, .project-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .project-table th {
+        background-color: #E9F5DB; /* Secondary Accent */
+        color: #87986A; /* Dark Olive */
+    }
+
+.inactive-row {
+    background-color: #f7f7f7;
+    color: #999;
+    font-style: italic;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: white;
+}
+
+.status-active {
+    background-color: #718355; /* Primary Accent */
+}
+
+.status-inactive {
+    background-color: #ccc;
+    color: #555;
+}

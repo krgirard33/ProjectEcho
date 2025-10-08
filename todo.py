@@ -3,6 +3,8 @@ from collections import defaultdict
 import sqlite3
 import datetime
 
+from projects_bp import projects_bp
+
 # Define the Blueprint. The URL prefix will be '/todo'
 todo_bp = Blueprint('todo_bp', __name__, url_prefix='/todo')
 
@@ -29,25 +31,54 @@ def todo():
         conn.execute('INSERT INTO todos (project, item, start_date, due_date, finished_date, priority, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
                      (project, item, start_date, due_date, finished_date, priority, status))
         conn.commit()
-        conn.close()
-        return redirect(url_for('todo_bp.todo'))
+
+
+    # Fetch all active projects for the dropdown
+    project_rows = conn.execute('SELECT name FROM projects WHERE is_active = 1 ORDER BY name ASC').fetchall()
+    active_projects = [row['name'] for row in project_rows]
+
         
-    all_todos = conn.execute('SELECT * FROM todos ORDER BY status, project, due_date ASC').fetchall()
+    # Calculate the cutoff date (31 days ago)
+    thirty_one_days_ago = datetime.date.today() - datetime.timedelta(days=31)
+    cutoff_date = thirty_one_days_ago.strftime('%Y-%m-%d')
+
+    # Query Active Todos
+    # Fetch all todos that are NOT finished
+    active_todos = conn.execute(
+        'SELECT * FROM todos WHERE status != "finished" ORDER BY project, due_date ASC'
+    ).fetchall()
+
+    # Query Finished Todos (Filtered by Date)
+    # Fetch all finished todos where the finished_date is ON OR AFTER the cutoff date
+    finished_todos_recent = conn.execute(
+        'SELECT * FROM todos WHERE status = "finished" AND finished_date >= ? ORDER BY project, finished_date DESC',
+        (cutoff_date,)
+    ).fetchall()
+
     conn.close()
-    
+
     active_todos_by_project = defaultdict(list)
     finished_todos_by_project = defaultdict(list)
     
-    for todo_item in all_todos:
-        if todo_item['status'] == 'finished':
-            # 🟢 Group finished items by project key
-            finished_todos_by_project[todo_item['project']].append(todo_item)
-        else:
-            active_todos_by_project[todo_item['project']].append(todo_item)
+    # Process Active Todos
+    for todo_item in active_todos:
+        active_todos_by_project[todo_item['project']].append(todo_item)
+    
+    # Process Recent Finished Todos
+    for todo_item in finished_todos_recent:
+        finished_todos_by_project[todo_item['project']].append(todo_item)
 
     sorted_finished_projects = sorted(finished_todos_by_project.items())
-            
-    return render_template('todo.html',active_todos_by_project=active_todos_by_project, finished_todos_by_project=sorted_finished_projects)
+    
+    # NOTE: The redirect should handle the POST request
+    if request.method == 'POST':
+        return redirect(url_for('todo_bp.todo'))
+        
+    return render_template('todo.html', 
+                           active_todos_by_project=active_todos_by_project, 
+                           finished_todos_by_project=sorted_finished_projects,
+                           active_projects=active_projects
+                           )  
         
 # Editing Todos
 @todo_bp.route('/edit/<int:item_id>', methods=('GET', 'POST'))
