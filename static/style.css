@@ -152,16 +152,16 @@ textarea {
 
 /* --- 5. JOURNAL ENTRY STYLES (INDEX PAGE) --- */
 .date-section {
-    padding-bottom: 15px;
-    margin-bottom: 25px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 .date-header {
     cursor: pointer;
     background-color: #E9F5DB;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 4px;
+    padding: 8px;
+    margin-top: 8px;
+    border-radius: 8px;
     user-select: none;
     transition: background-color 0.1s;
 }
