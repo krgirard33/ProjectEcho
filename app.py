@@ -11,12 +11,13 @@ from markupsafe import Markup, escape
 from calendar_app import calendar_bp 
 from todo import todo_bp 
 from projects_bp import projects_bp
+from export_data import export_data_bp
 
 # Set the app up as a package
 app = Flask(__name__)
 DB_NAME = 'journal.db'
 
-# --- Database Functions (keep these here or move to a separate config file later) ---
+# --- Database Functions ---
 def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
@@ -143,6 +144,7 @@ app.register_blueprint(calendar_bp)
 app.register_blueprint(todo_bp)
 app.jinja_env.filters['format_entry'] = format_entry_content
 app.register_blueprint(projects_bp)
+app.register_blueprint(export_data_bp)
 
 
 @app.route('/', methods=('GET', 'POST'))

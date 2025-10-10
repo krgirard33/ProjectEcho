@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Export Data{% endblock %}
+
+{% block content %}
+<div class="export-form-container">
+    <h1>Export Data</h1>
+    <p>Select a date range to export journal entries and finished tasks into a single ZIP file containing two CSV tabs.</p>
+
+    <form method="post" action="{{ url_for('export_data_bp.export_data') }}">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required>
+
+        <label for="end_date">End Date (Inclusive):</label>
+        <input type="date" id="end_date" name="end_date" required>
+
+        <button type="submit">Download Data Export (.zip)</button>
+    </form>
+</div>
+{% endblock %}
