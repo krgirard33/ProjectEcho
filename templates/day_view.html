@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Entries for {{ date }} - Project Echo{% endblock %}
 
@@ -21,22 +21,28 @@
 
 <div class="entries-list-container">
     <h2>Journal Entries</h2>
-    {% for entry in entries %}
-    <div class="entry">
-        <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}">
-            <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span>
-            {% if entry.project %}
-            <span class="entry-project">[{{ entry.project }}]</span>
-            {% endif %}
+    <ul class="entries-list" style="list-style-type: none; padding: 0;">
+        {% for entry in entries %}
+        <li class="entry">
+            <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}" class="edit-link">✏️</a>
+            <span class="entry-content-wrapper">
+                <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span>
 
-            - {{ entry.content | format_entry | safe }}
+                {% if entry.project %}
+                <a href="{{ url_for('projects_bp.project_dashboard', project_name=entry.project) }}" class="project-dashboard-link">
+                    <span class="entry-project">[{{ entry.project }}]</span>
+                </a>
+                {% endif %}
 
-            {% if entry.time_elapsed %}
-            <span class="time-elapsed">({{ entry.time_elapsed }})</span>
-            {% endif %}
-        </a>
-    </div>
-    {% endfor %}
+                - {{ entry.content | format_entry | safe }}
+
+                {% if entry.time_elapsed %}
+                <span class="time-elapsed">({{ entry.time_elapsed }})</span>
+                {% endif %}
+            </span>
+        </li>
+        {% endfor %}
+     </ul>
 </div>
 <div class="finished-tasks-section">
     <h2>Finished Tasks</h2>
@@ -48,7 +54,7 @@
                 {% if todo.project %}
                 <span class="finished-task-project">({{ todo.project }}): </span>
                 {% endif %}
-                <span class="finished-task-text">{{ todo.item }}</span>
+                <span class="finished-task-text">{{ todo.item_html }}</span>
             </a>
         </li>
         {% endfor %}

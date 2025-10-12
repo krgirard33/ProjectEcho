@@ -15,29 +15,23 @@
             </option>
             {% endfor %}
         </select>
-
-        <input type="text" id="item" name="item" value="{{ item.item }}" required>
-
+        <textarea id="item" name="item" rows="5" required class="project-input-edit">{{ item.item }}</textarea>
         <label for="start_date">Start:</label>
         <input type="date" id="start_date" name="start_date" value="{{ item.start_date }}" placeholder="Start Date">
-
         <label for="due_date">Due:</label>
         <input type="date" id="due_date" name="due_date" value="{{ item.due_date }}" placeholder="Due Date">
-
         <label for="priority">Priority:</label>
         <select id="priority" name="priority">
             {% for p in ['low', 'medium', 'high'] %}
             <option value="{{ p }}" {% if item.priority==p %}selected{% endif %}>{{ p | capitalize }} Priority</option>
             {% endfor %}
         </select>
-
         <label for="status">Status:</label>
         <select id="status" name="status">
             {% for s in ['backlog', 'holding', 'started', 'finished'] %}
             <option value="{{ s }}" {% if item.status==s %}selected{% endif %}>{{ s | capitalize }}</option>
             {% endfor %}
         </select>
-
         <div class="button-group">
             <button type="submit">Save Changes</button>
             <a href="{{ url_for('todo_bp.todo') }}" class="button-link">Cancel</a>

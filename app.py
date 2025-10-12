@@ -6,6 +6,7 @@ import webbrowser
 import threading
 import os
 from markupsafe import Markup, escape
+import markdown
 
 # Import the blueprints
 from calendar_app import calendar_bp 
@@ -133,7 +134,6 @@ def format_entry_content(content):
         html_lines.append('</ol>')
 
     # Join lines and return, ensuring we use Markup to tell Jinja it's safe HTML
-    from markupsafe import Markup
     return Markup(''.join(html_lines).strip('<br>'))
 
 init_db()

@@ -26,27 +26,22 @@
             <ul class="entries-list" style="list-style-type: none; padding: 0;">
                 {% for entry in entries %}
                 <li class="entry">
-                    {% if entry.id %}
-                    <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}">
+                    <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}" class="edit-link">✏️</a>
+                    <span class="entry-content-wrapper">
                         <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span>
+
                         {% if entry.project %}
-                        <span class="entry-project">[{{ entry.project }}]</span>
+                            <a href="{{ url_for('projects_bp.project_dashboard', project_name=entry.project) }}" class="project-dashboard-link">
+                                <span class="entry-project">[{{ entry.project }}]</span>
+                            </a>
                         {% endif %}
+
                         - {{ entry.content | format_entry | safe }}
+
                         {% if entry.time_elapsed %}
-                        <span class="time-elapsed">({{ entry.time_elapsed }})</span>
+                            <span class="time-elapsed">({{ entry.time_elapsed }})</span>
                         {% endif %}
-                    </a>
-                    {% else %}
-                    <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span>
-                    {% if entry.project %}
-                    <span class="entry-project">[{{ entry.project }}]</span>
-                    {% endif %}
-                    - {{ entry.content | format_entry | safe }}
-                    {% if entry.time_elapsed %}
-                    <span class="time-elapsed">({{ entry.time_elapsed }})</span>
-                    {% endif %}
-                    {% endif %}
+                    </span>
                 </li>
                 {% endfor %}
             </ul>

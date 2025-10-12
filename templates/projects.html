@@ -20,7 +20,11 @@
     <tbody>
         {% for project in projects %}
         <tr class="{% if not project.is_active %}inactive-row{% endif %}">
-            <td>{{ project.name }}</td>
+            <td>
+                <a href="{{ url_for('projects_bp.project_dashboard', project_name=project.name) }}" class="project-dashboard-link">
+                    <span class="entry-project">{{ project.name }}</span>
+                </a>
+            </td>
             <td>
                 <span class="status-badge status-{% if project.is_active %}active{% else %}inactive{% endif %}">
                     {% if project.is_active %}Active{% else %}Inactive{% endif %}

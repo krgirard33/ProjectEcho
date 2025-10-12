@@ -3,6 +3,8 @@ import datetime
 import calendar
 from collections import defaultdict
 import sqlite3
+import markdown
+from markupsafe import Markup, escape 
 
 # Define the Blueprint. The URL prefix will be '/day' for the view_day route, 
 # but the calendar_view route will use its own path.
@@ -101,7 +103,7 @@ def view_day(date):
     entries = conn.execute('SELECT * FROM entries WHERE SUBSTR(timestamp, 1, 10) = ? ORDER BY timestamp ASC', (date,)).fetchall()
     
     # Fetch Finished To-Do Items
-    finished_todos = conn.execute(
+    raw_finished_todos = conn.execute(
         'SELECT * FROM todos WHERE finished_date = ? AND status = "finished" ORDER BY item ASC',
         (date,)
     ).fetchall()
@@ -129,6 +131,16 @@ def view_day(date):
         previous_timestamp = datetime.datetime.strptime(current_timestamp_str, '%Y-%m-%d %H:%M:%S')
 
     entries_with_time.reverse()
+
+    finished_todos = []
+    for row in raw_finished_todos:
+        todo_item = dict(row) # Convert Row to dictionary
+        
+        # Convert Markdown to HTML and wrap in Markup
+        html_content = markdown.markdown(todo_item['item'])
+        todo_item['item_html'] = Markup(html_content)
+        
+        finished_todos.append(todo_item)
 
     return render_template('day_view.html', entries=reversed(entries_with_time), finished_todos=finished_todos, date=date, active_projects=active_projects)
 

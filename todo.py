@@ -2,6 +2,8 @@
 from collections import defaultdict
 import sqlite3
 import datetime
+import markdown
+from markupsafe import Markup, escape 
 
 from projects_bp import projects_bp
 
@@ -62,10 +64,16 @@ def todo():
     
     # Process Active Todos
     for todo_item in active_todos:
+        todo_item = dict(todo_item)
+        html_content = markdown.markdown(todo_item['item'])
+        todo_item['item_html'] = Markup(html_content)
         active_todos_by_project[todo_item['project']].append(todo_item)
     
     # Process Recent Finished Todos
     for todo_item in finished_todos_recent:
+        todo_item = dict(todo_item)
+        html_content = markdown.markdown(todo_item['item'])
+        todo_item['item_html'] = Markup(html_content)
         finished_todos_by_project[todo_item['project']].append(todo_item)
 
     sorted_finished_projects = sorted(finished_todos_by_project.items())
