@@ -1,0 +1,75 @@
+﻿{% extends "base.html" %}
+{% block title %}Dashboard: {{ project_name }}{% endblock %}
+
+{% block content %}
+
+<h1>Project Dashboard: {{ project_name }}</h1>
+
+<div class="metrics-grid">
+    <div class="metric-card">
+        <h3>{{ total_tasks }}</h3>
+        <p>Total Tasks</p>
+    </div>
+    <div class="metric-card">
+        <h3>{{ active_todos | length }}</h3>
+        <p>Active Tasks</p>
+    </div>
+    <div class="metric-card">
+        <h3>{{ completion_percentage }}%</h3>
+        <p>Completion Rate</p>
+    </div>
+</div>
+
+<div class="dashboard-section">
+    <h2>Active To-Dos ({{ active_todos | length }})</h2>
+    {% if active_todos %}
+    <ul class="todo-list" style="list-style-type: none; padding: 0;">
+        {% for item in active_todos %}
+        <li class="todo-item" style="background-color: white;">
+            <div class="item-details">
+                <a href="{{ url_for('todo_bp.edit_todo', item_id=item.id) }}" class="edit-link">✏️</a>
+                <span class="item-text">{{ item.item_html }}</span>
+                <span class="priority priority-{{ item.priority }}">{{ item.priority }}</span>
+            </div>
+            <div class="item-dates">
+                {% if item.due_date %}<span class="due-date-tag">Due: {{ item.due_date }}</span>{% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No active tasks for this project. Keep it up!</p>
+    {% endif %}
+</div>
+
+<div class="dashboard-section">
+    <h2>Journal Entries ({{ entries | length }})</h2>
+    {% if entries %}
+    <ul class="entries-list" style="list-style-type: none; padding: 0;">
+        {% for entry in entries %}
+        <li class="entry">
+            <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}" class="edit-link">✏️</a>
+            <span class="entry-content-wrapper">
+                <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span>
+
+                {% if entry.project %}
+                <a href="{{ url_for('projects_bp.project_dashboard', project_name=entry.project) }}" class="project-dashboard-link">
+                    <span class="entry-project">[{{ entry.project }}]</span>
+                </a>
+                {% endif %}
+
+                - {{ entry.content | format_entry | safe }}
+
+                {% if entry.time_elapsed %}
+                <span class="time-elapsed">({{ entry.time_elapsed }})</span>
+                {% endif %}
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No journal entries found for this project.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

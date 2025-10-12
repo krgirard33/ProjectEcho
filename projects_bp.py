@@ -1,8 +1,7 @@
-# projects_bp.py
-
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 import sqlite3
-# Assume get_db_connection is available (you'll need to import it or define it here)
+from markupsafe import Markup, escape
+import markdown
 
 projects_bp = Blueprint('projects_bp', __name__, url_prefix='/projects')
 
@@ -63,3 +62,57 @@ def edit_project(id):
         return "Project not found", 404
         
     return render_template('edit_project.html', project=project)
+
+@projects_bp.route('/dashboard/<project_name>')
+def project_dashboard(project_name):
+    conn = get_db_connection()
+
+    # Fetch Journal Entries for the Project
+    journal_entries = conn.execute(
+        'SELECT * FROM entries WHERE project = ? ORDER BY timestamp DESC',
+        (project_name,)
+    ).fetchall()
+    
+    # Fetch To-Do Items (Active and Finished)
+    all_todos = conn.execute(
+        'SELECT * FROM todos WHERE project = ? ORDER BY status, due_date ASC',
+        (project_name,)
+    ).fetchall()
+    
+    conn.close()
+
+    # Data Processing and Markdown Conversion 
+    active_todos = []
+    finished_todos = []
+    
+    # Loop through raw rows to apply Markdown and classify by status
+    for row in all_todos:
+        todo_item = dict(row) 
+        
+        # Convert Markdown to HTML and wrap in Markup for safe rendering
+        html_content = markdown.markdown(todo_item['item'])
+        todo_item['item_html'] = Markup(html_content)
+        
+        # Classify for metrics and template
+        if todo_item['status'] != 'finished':
+            active_todos.append(todo_item)
+        else:
+            finished_todos.append(todo_item)
+
+    # Metrics Calculation
+    total_tasks = len(all_todos)
+    finished_count = len(finished_todos)
+    
+    # Calculate simple completion percentage
+    completion_percentage = (finished_count / total_tasks * 100) if total_tasks > 0 else 0
+    
+    # Data Filtering for Template 
+    return render_template(
+        'project_dashboard.html',
+        project_name=project_name,
+        entries=journal_entries,
+        active_todos=active_todos,
+        finished_todos=finished_todos,
+        total_tasks=total_tasks,
+        completion_percentage=round(completion_percentage, 1)
+    )

@@ -175,26 +175,37 @@ textarea {
     display: none;
 }
 
+.entry-content-wrapper {
+    display: inline;
+    padding-left: 5px; /* Little space between icon and timestamp */
+}
+
+
 .entries-list-container h2 {
     background-color: #85C41A;
     display: block;
     padding: 5px;
 }
 
-.entry a {
-    text-decoration: none;
-    color: #333;
-    display: block;
-    padding: 5px;
-    border: 1px solid #B5C99A;
-    border-radius: 5px;
+.entry {
+    /* Ensure entry uses flexbox for alignment of icon and content */
+    display: flex;
+    align-items: flex-start; /* Aligns the pencil icon to the top of the entry */
+    margin-bottom: 10px;
+    padding: 5px 0; /* Add back padding lost from removing the <a> tag */
 }
 
-    .entry a:hover {
-        background-color: #E9F5DB;
-        border: 1px solid #B5C99A;
-        border-radius: 5px;
-    }
+.edit-link {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: #999;
+    transition: color 0.2s;
+    line-height: 1.2; /* Ensures vertical alignment */
+}
+
+.edit-link:hover {
+    color: #718355; /* Primary Accent color on hover */
+}
 
 .timestamp {
     font-weight: bold;
@@ -240,6 +251,11 @@ textarea {
     font-weight: bold;
     color: #718355;
     margin-right: 5px;
+}
+
+.project-dashboard-link {
+    text-decoration: none;
+    color: inherit; /* Keep the project color */
 }
 
 /* --- 6. TO-DO LIST STYLES --- */
@@ -493,3 +509,41 @@ textarea {
     .export-form-container button:hover {
         background-color: #87986A;
     }
+
+/* --- 13. Project Dashboard --- */
+.metrics-grid {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-bottom: 40px;
+    padding: 15px;
+    background-color: #E9F5DB; /* Secondary Accent */
+    border-radius: 8px;
+}
+
+.metric-card {
+    text-align: center;
+    padding: 10px;
+    flex: 1;
+    min-width: 150px;
+    border: 1px solid #B5C99A;
+    border-radius: 5px;
+}
+
+    .metric-card h3 {
+        margin: 0;
+        font-size: 2em;
+        color: #718355; /* Primary Accent */
+    }
+
+    .metric-card p {
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #87986A;
+    }
+
+.dashboard-section {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px dashed #B5C99A;
+}
