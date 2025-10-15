@@ -196,15 +196,12 @@ textarea {
 }
 
 .edit-link {
-    text-decoration: none;
-    font-size: 1.2em;
-    color: #999;
     transition: color 0.2s;
     line-height: 1.2; /* Ensures vertical alignment */
 }
 
 .edit-link:hover {
-    color: #718355; /* Primary Accent color on hover */
+    background-color: #718355; /* Primary Accent color on hover */
 }
 
 .timestamp {
@@ -232,19 +229,17 @@ textarea {
     padding: 5px;
 }
 
-.finished-todo-item a {
-    text-decoration: none;
-    color: #333;
-    display: block;
-    padding: 5px;
-    border: 1px solid #B5C99A;
-    border-radius: 5px;
+.finished-todo-item {
+    display: flex;
+    align-items: flex-start; 
+    margin-bottom: 10px;
+    padding: 5px 0; 
 }
 
-    .finished-todo-item a:hover {
-        background-color: #E9F5DB;
-        border: 1px solid #B5C99A;
-        border-radius: 5px;
+    .finished-todo-item a {
+        text-decoration: none;
+        color: inherit;
+        padding: 0;
     }
 
 .finished-task-project {
@@ -255,7 +250,7 @@ textarea {
 
 .project-dashboard-link {
     text-decoration: none;
-    color: inherit; /* Keep the project color */
+    color: inherit; 
 }
 
 /* --- 6. TO-DO LIST STYLES --- */

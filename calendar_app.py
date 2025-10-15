@@ -137,7 +137,12 @@ def view_day(date):
         todo_item = dict(row) # Convert Row to dictionary
         
         # Convert Markdown to HTML and wrap in Markup
-        html_content = markdown.markdown(todo_item['item'])
+        html_content = markdown.markdown(
+            todo_item['item'], 
+            extensions=['fenced_code', 'sane_lists']
+        )
+        if html_content.startswith('<p>') and html_content.endswith('</p>'):
+             html_content = html_content[3:-4]
         todo_item['item_html'] = Markup(html_content)
         
         finished_todos.append(todo_item)
@@ -150,13 +155,31 @@ def edit(entry_id):
     if request.method == 'POST':
         content = request.form['content']
         project = request.form.get('project') or None
-        original_date = request.form['original_date']
-        conn.execute('UPDATE entries SET content = ?, project = ? WHERE id = ?', (content, project, entry_id))
+
+        date_str = request.form['date']
+        time_str = request.form['time']
+        new_timestamp = f"{date_str} {time_str}:00" 
+
+        conn.execute(
+            'UPDATE entries SET content = ?, project = ?, timestamp = ? WHERE id = ?',
+            (content, project, new_timestamp, entry_id)
+        )
         conn.commit()
         conn.close()
-        return redirect(url_for('calendar_bp.view_day', date=original_date))
+        
+        # Redirect to the view for the new date
+        return redirect(url_for('calendar_bp.view_day', date=date_str))
         
     entry = conn.execute('SELECT * FROM entries WHERE id = ?', (entry_id,)).fetchone()
+
+    if entry is None:
+        conn.close()
+        return "Entry not found.", 404
+
+    # Split the full timestamp for the form inputs
+    full_timestamp = entry['timestamp']
+    entry_date = full_timestamp.split(' ')[0]   # YYYY-MM-DD
+    entry_time = full_timestamp.split(' ')[1][:5] # HH:MM (strips seconds)
 
     # Fetch active project names
     project_rows = conn.execute('SELECT name FROM projects WHERE is_active = 1 ORDER BY name ASC').fetchall()
@@ -164,8 +187,10 @@ def edit(entry_id):
 
     conn.close()
     
-    if entry is None:
-        return "Entry not found.", 404
-    
-    original_date = entry['timestamp'].split(' ')[0]
-    return render_template('edit.html', entry=entry, original_date=original_date, active_projects=active_projects)
+    return render_template(
+        'edit.html',
+        entry=entry,
+        entry_date=entry_date, 
+        entry_time=entry_time, 
+        active_projects=active_projects
+    )

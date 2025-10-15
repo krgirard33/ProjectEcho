@@ -10,11 +10,17 @@
         <select name="project" id="project" class="project-input-edit">
             <option value="">-- None (Optional) --</option>
             {% for project_name in active_projects %}
-            <option value="{{ project_name }}" {% if project_name == entry.project %}selected{% endif %}>
+            <option value="{{ project_name }}" {% if project_name==entry.project %}selected{% endif %}>
                 {{ project_name }}
             </option>
             {% endfor %}
         </select>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="{{ entry_date }}" required class="project-input-edit">
+
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time" value="{{ entry_time }}" required class="project-input-edit"><br>
 
         <label for="content">Entry Content:</label>
         <textarea name="content" id="content" rows="10" cols="50">{{ entry.content }}</textarea>
