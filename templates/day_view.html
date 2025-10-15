@@ -50,12 +50,15 @@
     <ul class="finished-tasks-list" style="list-style-type: none; padding: 0;">
         {% for todo in finished_todos %}
         <li class="finished-todo-item">
-            <a href="{{ url_for('todo_bp.edit_todo', item_id=todo.id) }}">
-                {% if todo.project %}
-                <span class="finished-task-project">({{ todo.project }}): </span>
-                {% endif %}
-                <span class="finished-task-text">{{ todo.item_html }}</span>
+            <a href="{{ url_for('todo_bp.edit_todo', item_id=todo.id) }}" class="edit-link">✏️</a>
+            {% if todo.project %}
+            <a href="{{ url_for('projects_bp.project_dashboard', project_name=todo.project) }}" class="project-dashboard-link">
+                <span class="entry-project">[{{ todo.project }}]</span>
             </a>
+            {% endif %}
+
+            - {{ todo.item_html }}
+
         </li>
         {% endfor %}
     </ul>
