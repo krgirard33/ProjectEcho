@@ -20,7 +20,18 @@
 </div>
 
 <div class="entries-list-container">
-    <h2>Journal Entries</h2>
+    <h2>
+        <span>Journal Entries</span>
+
+        {% if total_elapsed_minutes is defined %}
+            {% set total_hours = total_elapsed_minutes // 60 %}
+            {% set total_minutes_remaining = total_elapsed_minutes % 60 %}
+
+            <span class="total-time-display">
+                ({% if total_hours > 0 %}{{ total_hours }}h {% endif %}{{ total_minutes_remaining }}min)
+            </span>
+        {% endif %}
+    </h2>
     <ul class="entries-list" style="list-style-type: none; padding: 0;">
         {% for entry in entries %}
         <li class="entry">
@@ -36,13 +47,18 @@
 
                 - {{ entry.content | format_entry | safe }}
 
-                {% if entry.time_elapsed %}
-                <span class="time-elapsed">({{ entry.time_elapsed }})</span>
+                {% if entry.duration_minutes %}
+                {% set hours = entry.duration_minutes // 60 %}
+                {% set minutes = entry.duration_minutes % 60 %}
+
+                <span class="time-elapsed">
+                    ({{ hours }}h {{ minutes }}min)
+                </span>
                 {% endif %}
             </span>
         </li>
         {% endfor %}
-     </ul>
+    </ul>
 </div>
 <div class="finished-tasks-section">
     <h2>Finished Tasks</h2>

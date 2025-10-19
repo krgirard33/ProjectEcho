@@ -31,6 +31,7 @@
     <Compile Include="app.py" />
     <Compile Include="calendar_app.py" />
     <Compile Include="todo.py" />
+    <Compile Include="utilities.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
