@@ -13,6 +13,7 @@ from calendar_app import calendar_bp
 from todo import todo_bp 
 from projects_bp import projects_bp
 from export_data import export_data_bp
+from utilities import recalculate_day_durations
 
 # Set the app up as a package
 app = Flask(__name__)
@@ -33,6 +34,11 @@ def init_db():
             content TEXT NOT NULL
         );
     ''')
+
+    """conn.execute('''
+        ALTER TABLE entries ADD COLUMN duration_minutes INTEGER;
+    ''')"""
+
     # Add the 'project' column if it doesn't exist
     try:
         conn.execute("ALTER TABLE entries ADD COLUMN project TEXT;")
@@ -153,9 +159,14 @@ def index():
     if request.method == 'POST':
         content = request.form['content']
         project = request.form.get('project') or None
-        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        now = datetime.datetime.now()
+        date_of_entry = now.strftime('%Y-%m-%d')
+        timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
         conn.execute('INSERT INTO entries (timestamp, content, project) VALUES (?, ?, ?)',
                      (timestamp, content, project))
+        # Update elapsed times starting from the new entry's timestamp
+        recalculate_day_durations(conn, date_of_entry)
+
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
@@ -166,33 +177,46 @@ def index():
     # Get entries from the last 14 days
     fourteen_days_ago = datetime.datetime.now() - datetime.timedelta(days=14)
     cutoff_timestamp = fourteen_days_ago.strftime('%Y-%m-%d %H:%M:%S')
-    
+    """
     entries = conn.execute(
         'SELECT * FROM entries WHERE timestamp >= ? ORDER BY timestamp ASC',
         (cutoff_timestamp,)
     ).fetchall()
-    conn.close()
+    """
+    entries = conn.execute(
+        'SELECT *, duration_minutes FROM entries WHERE timestamp >= ? ORDER BY timestamp ASC',
+        (cutoff_timestamp,)
+    ).fetchall()
 
     entries_by_date = defaultdict(list)
-    previous_timestamp = None
-
+    
+    # Group the entries by date
+    all_dates = set()
     for entry in entries:
-        current_timestamp_str = entry['timestamp']
-        date_part = current_timestamp_str.split(' ')[0]
+        date_part = entry['timestamp'].split(' ')[0]
+        entries_by_date[date_part].append(entry)
+        all_dates.add(date_part) # Collect all unique dates
+
+    # Calculate Total Elapsed Time for each unique date
+    total_durations_by_date = {} 
+    
+    for date_str in all_dates:
+        # Query the database for the sum of duration_minutes for this date
+        total_duration_row = conn.execute(
+            'SELECT SUM(COALESCE(duration_minutes, 0)) AS total_minutes FROM entries WHERE strftime("%Y-%m-%d", timestamp) = ?',
+            (date_str,)
+        ).fetchone()
         
-        # Calculate time difference
-        time_elapsed = None
-        if previous_timestamp and date_part == previous_timestamp.strftime('%Y-%m-%d'):
-            time_elapsed = datetime.datetime.strptime(current_timestamp_str, '%Y-%m-%d %H:%M:%S') - previous_timestamp
-            
-        # Add the calculated time to the entry dictionary
-        entry_with_time = dict(entry)
-        entry_with_time['time_elapsed'] = time_elapsed
+        # Store the minutes
+        total_durations_by_date[date_str] = total_duration_row['total_minutes'] if total_duration_row['total_minutes'] is not None else 0
+
+    conn.close()
         
-        entries_by_date[date_part].append(entry_with_time)
-        previous_timestamp = datetime.datetime.strptime(current_timestamp_str, '%Y-%m-%d %H:%M:%S')
-        
-    return render_template('index.html', entries_by_date=reversed(entries_by_date.items()), active_projects=active_projects)
+    return render_template('index.html', 
+                           entries_by_date=reversed(entries_by_date.items()), 
+                           active_projects=active_projects,
+                           total_durations=total_durations_by_date
+                           )
 
 @app.route('/userguide')
 def instructions():

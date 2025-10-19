@@ -159,11 +159,14 @@ textarea {
 .date-header {
     cursor: pointer;
     background-color: #E9F5DB;
-    padding: 8px;
+    padding: 8px 15px;
     margin-top: 8px;
     border-radius: 8px;
     user-select: none;
     transition: background-color 0.1s;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
 }
 
     .date-header:hover {
@@ -182,9 +185,19 @@ textarea {
 
 
 .entries-list-container h2 {
+    color: #333;
     background-color: #85C41A;
-    display: block;
-    padding: 5px;
+    /* background-color: var(--color-primary); */
+    display: flex;
+    padding: 5px 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-time-display {
+    font-size: 0.9em; 
+    font-weight: normal; 
+    
 }
 
 .entry {

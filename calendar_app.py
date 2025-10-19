@@ -5,6 +5,7 @@ from collections import defaultdict
 import sqlite3
 import markdown
 from markupsafe import Markup, escape 
+from utilities import recalculate_day_durations
 
 # Define the Blueprint. The URL prefix will be '/day' for the view_day route, 
 # but the calendar_view route will use its own path.
@@ -112,6 +113,13 @@ def view_day(date):
     project_rows = conn.execute('SELECT name FROM projects WHERE is_active = 1 ORDER BY name ASC').fetchall()
     active_projects = [row['name'] for row in project_rows]
 
+    total_duration_row = conn.execute(
+        'SELECT SUM(COALESCE(duration_minutes, 0)) AS total_minutes FROM entries WHERE strftime("%Y-%m-%d", timestamp) = ?',
+        (date,)
+    ).fetchone() # COALESCE(duration_minutes, 0) treats NULL values as 0
+
+    total_elapsed_minutes = total_duration_row['total_minutes'] if total_duration_row['total_minutes'] is not None else 0
+
     conn.close()
 
     entries_with_time = []
@@ -147,7 +155,12 @@ def view_day(date):
         
         finished_todos.append(todo_item)
 
-    return render_template('day_view.html', entries=reversed(entries_with_time), finished_todos=finished_todos, date=date, active_projects=active_projects)
+    return render_template('day_view.html', 
+                           entries=reversed(entries_with_time), 
+                           finished_todos=finished_todos, 
+                           date=date, 
+                           active_projects=active_projects, 
+                           total_elapsed_minutes=total_elapsed_minutes)
 
 @calendar_bp.route('/edit/<int:entry_id>', methods=('GET', 'POST'))
 def edit(entry_id):
@@ -155,7 +168,6 @@ def edit(entry_id):
     if request.method == 'POST':
         content = request.form['content']
         project = request.form.get('project') or None
-
         date_str = request.form['date']
         time_str = request.form['time']
         new_timestamp = f"{date_str} {time_str}:00" 
@@ -164,6 +176,9 @@ def edit(entry_id):
             'UPDATE entries SET content = ?, project = ?, timestamp = ? WHERE id = ?',
             (content, project, new_timestamp, entry_id)
         )
+        # After updating, recalculate elapsed times starting from the new timestamp
+        recalculate_day_durations(conn, date_str)
+
         conn.commit()
         conn.close()
         
