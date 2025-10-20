@@ -296,6 +296,11 @@ textarea {
     background-color: white;
 }
 
+.finished-tasks-list {
+    list-style-type: none;
+    padding: 0;
+}
+
 .item-details {
     display: flex;
     align-items: center;
@@ -443,7 +448,7 @@ textarea {
         background-color: #E9F5DB;
     }
 
-/* --- 11. PROJECT MANAGEMENT STYLES (NEW SECTION) --- */
+/* --- 11. PROJECT MANAGEMENT STYLES --- */
 .project-table {
     width: 100%;
     border-collapse: collapse;
@@ -467,6 +472,10 @@ textarea {
     font-style: italic;
 }
 
+.entries-content-wrapper.hidden {
+    display: none;
+}
+
 .status-badge {
     padding: 4px 8px;
     border-radius: 4px;
@@ -484,7 +493,7 @@ textarea {
     color: #555;
 }
 
-
+/* --- 12. EXPORT DATA --- */
 .export-form-container {
     max-width: 400px;
     margin: 50px auto;
@@ -495,7 +504,6 @@ textarea {
     text-align: center;
 }
 
-/* --- 12. EXPORT DATA --- */
 .export-form-container input[type="date"],
 .export-form-container button {
     width: 100%;

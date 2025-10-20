@@ -7,6 +7,8 @@
 <form method="post">
     <label for="name">Project Name:</label>
     <input type="text" id="name" name="name" value="{{ project.name }}" required class="project-input-edit"><br>
+    <label for="charging_code">Charging Code:</label>
+    <input type="text" name="charging_code" value="{{charging_code}}" class="project-input-edit"><br>
 
     <label for="is_active">Status:</label>
     <input type="checkbox" id="is_active" name="is_active" {% if project.is_active %}checked{% endif %}>
@@ -16,6 +18,6 @@
 </form>
 
 <p style="margin-top: 20px;">
-    <a href="{{ url_for('projects_bp.manage_projects') }}">← Back to Project List</a>
+    <a href="{{ url_for('projects_bp.projects') }}">← Back to Project List</a>
 </p>
 {% endblock %}

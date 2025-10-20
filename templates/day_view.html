@@ -63,7 +63,7 @@
 <div class="finished-tasks-section">
     <h2>Finished Tasks</h2>
     {% if finished_todos %}
-    <ul class="finished-tasks-list" style="list-style-type: none; padding: 0;">
+    <ul class="finished-tasks-list">
         {% for todo in finished_todos %}
         <li class="finished-todo-item">
             <a href="{{ url_for('todo_bp.edit_todo', item_id=todo.id) }}" class="edit-link">✏️</a>

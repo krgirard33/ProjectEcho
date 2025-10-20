@@ -18,6 +18,7 @@ from utilities import recalculate_day_durations
 # Set the app up as a package
 app = Flask(__name__)
 DB_NAME = 'journal.db'
+app.config['SECRET_KEY'] = 'a-super-secret-key-for-sessions'
 
 # --- Database Functions ---
 def get_db_connection():
@@ -31,20 +32,11 @@ def init_db():
         CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp TEXT NOT NULL,
-            content TEXT NOT NULL
+            content TEXT NOT NULL,
+            duration_minutes INTEGER,
+            project TEXT
         );
     ''')
-
-    """conn.execute('''
-        ALTER TABLE entries ADD COLUMN duration_minutes INTEGER;
-    ''')"""
-
-    # Add the 'project' column if it doesn't exist
-    try:
-        conn.execute("ALTER TABLE entries ADD COLUMN project TEXT;")
-    except sqlite3.OperationalError:
-        # This will fail if the column already exists, which is fine
-        pass 
 
     conn.execute('''
         CREATE TABLE IF NOT EXISTS todos (
@@ -63,11 +55,22 @@ def init_db():
         CREATE TABLE IF NOT EXISTS projects (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL UNIQUE,
-            is_active BOOLEAN NOT NULL DEFAULT 1 -- 1 for active, 0 for inactive
+            is_active BOOLEAN NOT NULL DEFAULT 1, -- 1 for active, 0 for inactive
+            charging_code TEXT NOT NULL
         );
     ''')
-    conn.close()
 
+    # Add a new column if it doesn't exist
+    try:
+        conn.execute('''        
+        ALTER TABLE projects ADD COLUMN charging_code TEXT;        
+        ''')
+    except sqlite3.OperationalError:
+        # This will fail if the column already exists, which is fine
+        pass 
+
+    conn.close()
+    
 # Jinja Filter for Entry Formatting
 def format_entry_content(content):
     # Converts newline characters to <br>, and handles simple markdown for lists.
@@ -177,12 +180,7 @@ def index():
     # Get entries from the last 14 days
     fourteen_days_ago = datetime.datetime.now() - datetime.timedelta(days=14)
     cutoff_timestamp = fourteen_days_ago.strftime('%Y-%m-%d %H:%M:%S')
-    """
-    entries = conn.execute(
-        'SELECT * FROM entries WHERE timestamp >= ? ORDER BY timestamp ASC',
-        (cutoff_timestamp,)
-    ).fetchall()
-    """
+    
     entries = conn.execute(
         'SELECT *, duration_minutes FROM entries WHERE timestamp >= ? ORDER BY timestamp ASC',
         (cutoff_timestamp,)

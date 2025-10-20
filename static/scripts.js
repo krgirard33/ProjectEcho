@@ -12,3 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+function toggleEntries(headerElement) {
+    // Finds the next sibling element with the class 'entries-content-wrapper'
+    const wrapper = headerElement.nextElementSibling;
+
+    if (wrapper && wrapper.classList.contains('entries-content-wrapper')) {
+        wrapper.classList.toggle('hidden');
+    }
+}
