@@ -17,14 +17,6 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# calendar_app.py
-
-from flask import Blueprint, render_template, request, redirect, url_for
-import datetime
-import calendar
-from collections import defaultdict
-import sqlite3
-
 @calendar_bp.route('/calendar', defaults={'year': None, 'month': None})
 @calendar_bp.route('/calendar/<int:year>/<int:month>')
 def calendar_view(year, month):

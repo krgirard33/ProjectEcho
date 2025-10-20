@@ -42,34 +42,64 @@
     {% endif %}
 </div>
 
-<div class="dashboard-section">
-    <h2>Journal Entries ({{ entries | length }})</h2>
-    {% if entries %}
-    <ul class="entries-list" style="list-style-type: none; padding: 0;">
-        {% for entry in entries %}
-        <li class="entry">
-            <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}" class="edit-link">✏️</a>
-            <span class="entry-content-wrapper">
-                <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span>
+<div class="journal-entries-container">
+    <h2>Journal Entries</h2>
+    {% for date_str, entries in entries_by_date %}
 
-                {% if entry.project %}
-                <a href="{{ url_for('projects_bp.project_dashboard', project_name=entry.project) }}" class="project-dashboard-link">
-                    <span class="entry-project">[{{ entry.project }}]</span>
-                </a>
-                {% endif %}
+    <div class="date-section">
+        {% set total_minutes = daily_project_totals[date_str] %}
+        {% set total_hours = total_minutes // 60 %}
+        {% set total_minutes_remaining = total_minutes % 60 %}
 
-                - {{ entry.content | format_entry | safe }}
-
-                {% if entry.time_elapsed %}
-                <span class="time-elapsed">({{ entry.time_elapsed }})</span>
-                {% endif %}
+        <h2 class="date-header" onclick="toggleEntries(this)">
+            <span>{{ date_str }}</span>
+            {% if total_minutes > 0 %}
+            <span class="total-time-display">
+                {% if total_hours > 0 %}{{ total_hours }}h {% endif %}{{ total_minutes_remaining }}min
             </span>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No journal entries found for this project.</p>
-    {% endif %}
-</div>
+            {% endif %}
+        </h2>
+        <div class="entries-content-wrapper {% if loop.index0 > 0 %}hidden{% endif %}">
+            <ul class="entries-list" style="list-style-type: none; padding: 0;">
+                {% for entry in entries %}
+                <li class="entry">
+                    <a href="{{ url_for('calendar_bp.edit', entry_id=entry.id) }}" class="edit-link">✏️</a>
+                    <span class="entry-content-wrapper">
+                        <span class="timestamp">{{ entry.timestamp.split(' ')[1] }}</span>
+                        {% if entry.duration_minutes %}
+                        {% set hours = entry.duration_minutes // 60 %}
+                        {% set minutes = entry.duration_minutes % 60 %}
+                        <span class="time-elapsed">
+                            +{% if hours > 0 %}{{ hours }}h {% endif %}{{ minutes }}min
+                        </span>
+                        {% endif %}
 
-{% endblock %}
+                        - {{ entry.content | format_entry | safe }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="finished-tasks-section">
+        <h2>Finished Tasks</h2>
+        {% if finished_todos %}
+        <ul class="finished-tasks-list">
+            {% for todo in finished_todos %}
+            <li class="finished-todo-item">
+                <a href="{{ url_for('todo_bp.edit_todo', item_id=todo.id) }}" class="edit-link">✏️</a>
+
+                <!--<span class="entry-content-wrapper finished-todo-content">-->
+                - {{ todo.item_html | safe }}
+                <!--</span>-->
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="no-tasks-message">No tasks have been finished for this project yet.</p>
+        {% endif %}
+    </div>
+
+    {% endblock %}

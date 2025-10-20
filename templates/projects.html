@@ -4,8 +4,13 @@
 {% block content %}
 <h1>Manage Projects</h1>
 
-<form method="post" action="{{ url_for('projects_bp.manage_projects') }}" style="margin-bottom: 30px;">
+<form method="post" action="{{ url_for('projects_bp.projects') }}" style="margin-bottom: 30px;">
     <input type="text" name="name" placeholder="New Project Name" required style="padding: 8px; width: 250px;">
+    <input type="text" name="charging_code" placeholder="Charging Code (Optional)">
+    <select name="status">
+        <option value="active">Active</option>
+        <option value="unactive">Unactive</option>
+    </select>
     <button type="submit">Add Project</button>
 </form>
 
@@ -24,6 +29,9 @@
                 <a href="{{ url_for('projects_bp.project_dashboard', project_name=project.name) }}" class="project-dashboard-link">
                     <span class="entry-project">{{ project.name }}</span>
                 </a>
+            </td>
+            <td>                
+                <span class="charging_code">{{ project.charging_code }}</span>
             </td>
             <td>
                 <span class="status-badge status-{% if project.is_active %}active{% else %}inactive{% endif %}">
