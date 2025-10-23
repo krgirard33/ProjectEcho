@@ -31,14 +31,19 @@ def export_data():
 
         # Fetch Entries
         entries = conn.execute(
-            'SELECT timestamp, project, content FROM entries WHERE timestamp >= ? AND timestamp < ? ORDER BY timestamp',
+            'SELECT timestamp, project, content, duration_minutes FROM entries WHERE timestamp >= ? AND timestamp < ? ORDER BY timestamp',
             (start_date_str, end_date_inclusive)
         ).fetchall()
 
         # Fetch Finished Todos (Using finished_date)
         finished_todos = conn.execute(
-            'SELECT finished_date, project, item, start_date, due_date, priority FROM todos WHERE finished_date >= ? AND finished_date < ? AND status = "finished" ORDER BY finished_date',
+            'SELECT finished_date, project, item, start_date, due_date, priority, status FROM todos WHERE finished_date >= ? AND finished_date < ? AND status = "finished" ORDER BY finished_date',
             (start_date_str, end_date_inclusive)
+        ).fetchall()
+
+        # Fetch Projects
+        projects = conn.execute(
+            'SELECT name, charging_code, status, is_active FROM projects'
         ).fetchall()
         
         conn.close()
@@ -66,6 +71,15 @@ def export_data():
             
             # Write the CSV file to the zip archive
             zf.writestr('finished_todos.csv', todos_output.getvalue())
+
+            projects_output = io.StringIO()
+            writer = csv.writer(projects_output)
+            writer.writerow(['Project', 'Charge #', 'Status', 'Is Active']) #Header
+            for row in projects:
+                writer.writerow(tuple(row))
+            
+            # Write the CSV file to the zip archive
+            zf.writestr('projects.csv', projects_output.getvalue())
 
         zip_buffer.seek(0)
         

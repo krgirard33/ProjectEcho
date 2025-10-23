@@ -8,7 +8,7 @@
     <label for="name">Project Name:</label>
     <input type="text" id="name" name="name" value="{{ project.name }}" required class="project-input-edit"><br>
     <label for="charging_code">Charging Code:</label>
-    <input type="text" name="charging_code" value="{{charging_code}}" class="project-input-edit"><br>
+    <input type="text" name="charging_code" value="{{ project.charging_code }}" class="project-input-edit"><br>
 
     <label for="is_active">Status:</label>
     <input type="checkbox" id="is_active" name="is_active" {% if project.is_active %}checked{% endif %}>
