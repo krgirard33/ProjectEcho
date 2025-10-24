@@ -30,6 +30,8 @@
   <ItemGroup>
     <Compile Include="app.py" />
     <Compile Include="calendar_app.py" />
+    <Compile Include="recurring_bp.py" />
+    <Compile Include="sqlite3_explorer.py" />
     <Compile Include="todo.py" />
     <Compile Include="utilities.py" />
     <Compile Include="__init__.py" />

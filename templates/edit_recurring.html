@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Edit Recurring To-Do{% endblock %}
+
+{% block content %}
+<h2>Edit Recurring To-Do</h2>
+
+<form method="POST">
+    <label for="item">Task Description:</label>
+    <textarea type="text" id="item" name="item" rows="5" required class="project-input-edit"
+              value="{{ item.item }}"> {{ item.item }} </textarea>
+
+    <label for="project">Project:</label>
+    <select name="project" id="project">
+        <option value="">-- No Project --</option>
+        {% for project in active_projects %}
+        <option value="{{ project }}" {% if item.project==project %}selected{% endif %}>
+            {{ project }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label for="recurrence_type">Recurrence Type:</label>
+    <select name="recurrence_type" id="recurrence_type" required>
+        {% set types = ['daily', 'weekly', 'monthly'] %}
+        {% for type in types %}
+        <option value="{{ type }}" {% if item.recurrence_type==type %}selected{% endif %}>
+            {{ type | capitalize }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label for="next_due_date">Next Due Date (YYYY-MM-DD):</label>
+    <input type="date" id="next_due_date" name="next_due_date"
+           value="{{ item.next_due_date }}" required>
+
+    <div class="checkbox-group">
+        <input type="checkbox" id="is_active" name="is_active" value="1"
+               {% if item.is_active %}checked{% endif %}>
+        <label for="is_active">Is Active?</label>
+    </div>
+
+    <button type="submit" class="button-primary">Save Changes</button>
+</form>
+{% endblock %}

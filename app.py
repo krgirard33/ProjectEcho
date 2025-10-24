@@ -7,13 +7,15 @@ import threading
 import os
 from markupsafe import Markup, escape
 import markdown
+import recurring_bp
+from utilities import recalculate_day_durations, run_daily_recurrence_check, check_time
 
 # Import the blueprints
 from calendar_app import calendar_bp 
 from todo import todo_bp 
 from projects_bp import projects_bp
 from export_data import export_data_bp
-from utilities import recalculate_day_durations
+from recurring_bp import recurring_bp 
 
 # Set the app up as a package
 app = Flask(__name__)
@@ -57,6 +59,18 @@ def init_db():
             name TEXT NOT NULL UNIQUE,
             is_active BOOLEAN NOT NULL DEFAULT 1, -- 1 for active, 0 for inactive
             charging_code TEXT NOT NULL
+        );
+    ''')
+
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS recurring_todos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            item TEXT NOT NULL,
+            project TEXT,
+            recurrence_type TEXT NOT NULL CHECK(recurrence_type IN ('daily', 'weekly', 'monthly')),
+            next_due_date TEXT NOT NULL, -- YYYY-MM-DD format
+            is_active BOOLEAN NOT NULL DEFAULT 1,
+            FOREIGN KEY(project) REFERENCES projects(name)
         );
     ''')
 
@@ -154,7 +168,7 @@ app.register_blueprint(todo_bp)
 app.jinja_env.filters['format_entry'] = format_entry_content
 app.register_blueprint(projects_bp)
 app.register_blueprint(export_data_bp)
-
+app.register_blueprint(recurring_bp)
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
