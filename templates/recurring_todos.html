@@ -1,0 +1,51 @@
+﻿{% extends "base.html" %}
+{% block title %}Create Recurring Todos{% endblock %}
+
+{% block content %}
+
+<h1>Create Recurring Todos</h1>
+<div class="todo-form-container">
+    <form method="post">
+        <textarea type="text" name="item" rows="5" class="project-input-edit" placeholder="Task description (e.g., Water plants)" required></textarea>
+
+        <select name="project" class="project-input" required>
+            <option value="" disabled selected>-- Select Project --</option>
+            {% for project_name in active_projects %}
+            <option value="{{ project_name }}">{{ project_name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="recurrence_type" required>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+
+        <input type="date" name="next_due_date" required>
+
+        <button type="submit">Add Recurring To-Do</button>
+    </form>
+</div>
+<div class="todo-list-container">
+    <h2>Recurring Todos</h2>
+
+    <ul class="todo-list">
+        {% for item in recurring_items %}
+        <li class="todo-item status-active">
+            <div class="item-details">
+                <a href="{{ url_for('recurring_bp.edit_recurring', id=item.id) }}" class="edit-link">✏️</a>
+
+                <span class="item-text">{{ item.item }}</span>
+
+                <span class="recurrence-tag">Recurrence: {{ item.recurrence_type | capitalize }}</span>
+            </div>
+            <div class="item-dates">
+                <span class="next-due-tag">Next Due: {{ item.next_due_date }}</span>
+                <span class="status-badge status-{{ 'active' if item.is_active else 'inactive' }}">{{ 'Active' if item.is_active else 'Inactive' }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

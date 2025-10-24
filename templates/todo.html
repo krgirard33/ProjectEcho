@@ -4,6 +4,19 @@
 
 {% block content %}
 <h1>Todo List</h1>
+<div class="recurrence-check-container">
+    <form method="post" action="{{ url_for('todo_bp.trigger_recurring_check') }}">
+        <button type="submit" class="button-secondary check-button"
+                onclick="return confirm('Are you sure you want to run the daily recurrence check now?');">
+            Daily Recurrence Check
+        </button>
+    </form>
+    <form method="get" action="{{ url_for('recurring_bp.manage_recurring') }}">
+        <button type="submit" class="button-secondary check-button">
+            Recurring Todos
+        </button>
+    </form>
+</div>
 <div class="todo-form-container">
     <form method="post" action="{{ url_for('todo_bp.todo') }}">
         <select name="project" class="project-input" required>
@@ -30,6 +43,7 @@
         <button type="submit">Add Task</button>
     </form>
 </div>
+
 
 <div class="todo-list-container">
     <h2>Active Tasks</h2>

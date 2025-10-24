@@ -1,4 +1,4 @@
-﻿from flask import Blueprint, render_template, request, redirect, url_for
+﻿from flask import Blueprint, render_template, request, redirect, url_for, flash
 from collections import defaultdict
 import sqlite3
 import datetime
@@ -6,6 +6,7 @@ import markdown
 from markupsafe import Markup, escape 
 
 from projects_bp import projects_bp
+from utilities import run_daily_recurrence_check
 
 # Define the Blueprint. The URL prefix will be '/todo'
 todo_bp = Blueprint('todo_bp', __name__, url_prefix='/todo')
@@ -102,7 +103,6 @@ def edit_todo(item_id):
         status = request.form['status']
         
         # Determine the finished_date based on the new status
-        # ... (Your finished_date logic is correct here)
         current_finished_date_tuple = conn.execute('SELECT finished_date FROM todos WHERE id = ?', (item_id,)).fetchone()
         current_finished_date = current_finished_date_tuple[0] if current_finished_date_tuple else None
         
@@ -134,3 +134,14 @@ def edit_todo(item_id):
         return "Todo item not found.", 404
         
     return render_template('edit_todo.html', item=todo_item, active_projects=active_projects)
+
+@todo_bp.route('/check_recurring', methods=['POST'])
+def trigger_recurring_check():
+    tasks_created = run_daily_recurrence_check()
+    
+    if tasks_created > 0:
+        flash(f'Daily recurrence check complete: {tasks_created} new task(s) created!', 'success')
+    else:
+        flash('Daily recurrence check complete: No new tasks were due today.', 'info')
+    
+    return redirect(url_for('todo_bp.todo'))

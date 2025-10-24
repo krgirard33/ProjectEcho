@@ -372,6 +372,27 @@ textarea {
     color: #999;
 }
 
+/* Recurrance button*/
+.recurrence-check-container {
+    margin-bottom: 20px;
+    text-align: right; /* Align button to the right for visibility */
+}
+
+.check-button {
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+    .check-button:hover {
+        background-color: #6c757d; /* Slightly darker shade */
+    }
+
 /* --- 7. FINISHED TASK STYLES --- */
 .finished-list-container {
     margin-top: 40px;
