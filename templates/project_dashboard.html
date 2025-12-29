@@ -90,10 +90,10 @@
             {% for todo in finished_todos %}
             <li class="finished-todo-item">
                 <a href="{{ url_for('todo_bp.edit_todo', item_id=todo.id) }}" class="edit-link">✏️</a>
-
-                <!--<span class="entry-content-wrapper finished-todo-content">-->
-                - {{ todo.item_html | safe }}
-                <!--</span>-->
+                <span class="entry-content-wrapper finished-todo-content">
+                    <span class="finished-date-tag">{{ todo.finished_date }} </span>
+                    <span class="finished-item-content">{{ todo.item_html | safe }}</span>
+                </span>
             </li>
             {% endfor %}
         </ul>

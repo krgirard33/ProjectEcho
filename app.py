@@ -36,7 +36,7 @@ def init_db():
             timestamp TEXT NOT NULL,
             content TEXT NOT NULL,
             duration_minutes INTEGER,
-            project TEXT
+            project TEXT NOT NULL
         );
     ''')
 
@@ -49,7 +49,10 @@ def init_db():
             due_date TEXT,
             finished_date TEXT,
             priority TEXT NOT NULL,
-            status TEXT NOT NULL
+            status TEXT NOT NULL,
+            recurring_id INTEGER, 
+            FOREIGN KEY(project) REFERENCES projects(name),
+            FOREIGN KEY(recurring_id) REFERENCES recurring_todos(id) 
         );
     ''')
 
@@ -58,7 +61,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL UNIQUE,
             is_active BOOLEAN NOT NULL DEFAULT 1, -- 1 for active, 0 for inactive
-            charging_code TEXT NOT NULL
+            charging_code TEXT
         );
     ''')
 
@@ -82,7 +85,7 @@ def init_db():
     except sqlite3.OperationalError:
         # This will fail if the column already exists, which is fine
         pass 
-
+    
     conn.close()
     
 # Jinja Filter for Entry Formatting

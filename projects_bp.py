@@ -24,13 +24,15 @@ def projects():
         # Logic to add a new project
         if project_name:
             try:
-                conn.execute('INSERT INTO projects (name, status, is_active, charging_code) VALUES (?, ?, ?, ?)', 
-                    (project_name, status, is_active, charging_code))
+                conn.execute('INSERT INTO projects (name, is_active, charging_code) VALUES (?, ?, ?)', 
+                    (project_name, is_active, charging_code))
                 conn.commit()
             except sqlite3.IntegrityError:
                 # Handle case where project name is already used (UNIQUE constraint)
                 flash(f'Project "{project_name}" already exists.', 'error')
             except Exception as e:
+                conn.rollback() # Ensure transaction is cancelled
+                print(f"DATABASE INSERTION FAILED: {e}") # Print the error to your terminal
                 flash(f'An error occurred: {e}', 'error')
         
         return redirect(url_for('projects_bp.projects'))

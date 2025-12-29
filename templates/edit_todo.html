@@ -10,7 +10,7 @@
 
         <select name="project" id="project" class="project-input-edit" required>
             {% for project_name in active_projects %}
-            <option value="{{ project_name }}" {% if project_name == item.project %}selected{% endif %}>
+            <option value="{{ project_name }}" {% if project_name==item.project %}selected{% endif %}>
                 {{ project_name }}
             </option>
             {% endfor %}
@@ -20,6 +20,8 @@
         <input type="date" id="start_date" name="start_date" value="{{ item.start_date }}" placeholder="Start Date">
         <label for="due_date">Due:</label>
         <input type="date" id="due_date" name="due_date" value="{{ item.due_date }}" placeholder="Due Date">
+        <label for="finished_date">Finished:</label>
+        <input type="date" id="finished_date" name="finished_date" value="{{ item.finished_date }}" placeholder="Finished Date">
         <label for="priority">Priority:</label>
         <select id="priority" name="priority">
             {% for p in ['low', 'medium', 'high'] %}

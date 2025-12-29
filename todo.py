@@ -4,9 +4,7 @@ import sqlite3
 import datetime
 import markdown
 from markupsafe import Markup, escape 
-
-from projects_bp import projects_bp
-from utilities import run_daily_recurrence_check
+from utilities import run_daily_recurrence_check, calculate_next_due_date 
 
 # Define the Blueprint. The URL prefix will be '/todo'
 todo_bp = Blueprint('todo_bp', __name__, url_prefix='/todo')
@@ -31,8 +29,9 @@ def todo():
         # Check if the task is being marked as finished and set the finished_date
         finished_date = datetime.date.today().strftime('%Y-%m-%d') if status == 'finished' else None
         
-        conn.execute('INSERT INTO todos (project, item, start_date, due_date, finished_date, priority, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                     (project, item, start_date, due_date, finished_date, priority, status))
+        # When adding a manual todo, recurring_id is NULL
+        conn.execute('INSERT INTO todos (project, item, start_date, due_date, finished_date, priority, status, recurring_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                     (project, item, start_date, due_date, finished_date, priority, status, None))
         conn.commit()
 
 
@@ -79,7 +78,7 @@ def todo():
 
     sorted_finished_projects = sorted(finished_todos_by_project.items())
     
-    # NOTE: The redirect should handle the POST request
+    # The redirect should handle the POST request
     if request.method == 'POST':
         return redirect(url_for('todo_bp.todo'))
         
@@ -101,23 +100,61 @@ def edit_todo(item_id):
         due_date = request.form['due_date'] or None
         priority = request.form['priority']
         status = request.form['status']
+        submitted_finished_date = request.form['finished_date'] or None # <--- NEW LINE
         
         # Determine the finished_date based on the new status
-        current_finished_date_tuple = conn.execute('SELECT finished_date FROM todos WHERE id = ?', (item_id,)).fetchone()
-        current_finished_date = current_finished_date_tuple[0] if current_finished_date_tuple else None
+        current_data = conn.execute('SELECT finished_date, recurring_id FROM todos WHERE id = ?', (item_id,)).fetchone()
         
-        if status == 'finished' and not current_finished_date:
-            finished_date = datetime.date.today().strftime('%Y-%m-%d')
-        elif status != 'finished' and current_finished_date:
-            finished_date = None
-        else:
-            finished_date = current_finished_date
+        current_finished_date = current_data['finished_date'] if current_data else None
+        recurring_template_id = current_data['recurring_id'] if current_data else None
+        
+        is_being_finished = False
+        final_finished_date = None 
+        
+        # Handle manual date input
+        if status == 'finished':
+            # Use the submitted date if available, otherwise default to today
+            final_finished_date = submitted_finished_date or datetime.date.today().strftime('%Y-%m-%d')
+            
+            # Check if this transition triggers recurrence
+            if not current_finished_date:
+                is_being_finished = True 
 
+        elif status != 'finished':
+            # Status is not finished, so finished_date must be NULL
+            final_finished_date = None
+            
+        # Update the current task using the determined final_finished_date
         conn.execute('''
             UPDATE todos 
             SET project = ?, item = ?, start_date = ?, due_date = ?, finished_date = ?, priority = ?, status = ? 
             WHERE id = ?
-        ''', (project, item, start_date, due_date, finished_date, priority, status, item_id))
+        ''', (project, item, start_date, due_date, final_finished_date, priority, status, item_id)) 
+        
+        # Check for recurrance & create new todo
+        if is_being_finished and recurring_template_id:
+            # Get the template details
+            template = conn.execute('SELECT * FROM recurring_todos WHERE id = ?', (recurring_template_id,)).fetchone()
+            
+            if template and template['is_active']:
+                from utilities import calculate_next_due_date
+                
+                # Use the DUE DATE of the just finished todo as the basis for the next calculation
+                next_due_date_str = calculate_next_due_date(due_date, template['recurrence_type']) 
+                
+                # Insert the new todo instance
+                conn.execute(
+                    'INSERT INTO todos (item, project, due_date, priority, status, recurring_id) VALUES (?, ?, ?, ?, ?, ?)',
+                    (template['item'], template['project'], next_due_date_str, priority, 'active', recurring_template_id)
+                )
+
+                # Update the recurring template's next_due_date
+                conn.execute(
+                    'UPDATE recurring_todos SET next_due_date = ? WHERE id = ?',
+                    (next_due_date_str, recurring_template_id)
+                )
+                flash(f"Next instance of recurring task '{template['item']}' created for {next_due_date_str}!", 'success')
+                
         conn.commit()
         conn.close()
         return redirect(url_for('todo_bp.todo'))

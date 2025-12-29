@@ -23,12 +23,26 @@ def manage_recurring():
         next_due_date = request.form['next_due_date']
         
         if item and recurrence_type and next_due_date:
-            conn.execute(
-                'INSERT INTO recurring_todos (item, project, recurrence_type, next_due_date) VALUES (?, ?, ?, ?)',
-                (item, project, recurrence_type, next_due_date)
-            )
-            conn.commit()
-            flash('Recurring To-Do added successfully!', 'success')
+            try:
+                # Insert the Recurring To-Do Template and get its ID
+                cursor = conn.execute(
+                    'INSERT INTO recurring_todos (item, project, recurrence_type, next_due_date, is_active) VALUES (?, ?, ?, ?, ?)',
+                    (item, project, recurrence_type, next_due_date, 1)
+                )
+                recurring_template_id = cursor.lastrowid # Capture the ID
+
+                # Insert the first instance into the todos table, linked to the template
+                conn.execute(
+                    'INSERT INTO todos (item, project, due_date, priority, status, recurring_id) VALUES (?, ?, ?, ?, ?, ?)',
+                    (item, project, next_due_date, 'low', 'active', recurring_template_id) 
+                )
+                
+                conn.commit()
+                flash('Recurring To-Do and initial task added successfully!', 'success')
+            except Exception as e:
+                conn.rollback()
+                print(f"INSERTION FAILED: {e}")
+                flash(f'An error occurred: {e}', 'error')
         else:
             flash('Please fill out all required fields.', 'error')
         
