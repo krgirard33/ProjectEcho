@@ -5,17 +5,11 @@ from collections import defaultdict
 import sqlite3
 import markdown
 from markupsafe import Markup, escape 
-from utilities import recalculate_day_durations
+from utilities import recalculate_day_durations, get_db_connection
 
 # Define the Blueprint. The URL prefix will be '/day' for the view_day route, 
 # but the calendar_view route will use its own path.
 calendar_bp = Blueprint('calendar_bp', __name__)
-
-# Helper function to get database connection (copied from app.py)
-def get_db_connection():
-    conn = sqlite3.connect('journal.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @calendar_bp.route('/calendar', defaults={'year': None, 'month': None})
 @calendar_bp.route('/calendar/<int:year>/<int:month>')

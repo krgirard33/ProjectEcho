@@ -5,14 +5,9 @@ import csv
 import zipfile
 import datetime
 import sqlite3
+from utilities import get_db_connection
 
 export_data_bp = Blueprint('export_data_bp', __name__)
-
-# Helper function to get database connection (copied from app.py)
-def get_db_connection():
-    conn = sqlite3.connect('journal.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @export_data_bp.route('/export', methods=['GET', 'POST'])
 def export_data():

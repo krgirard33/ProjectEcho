@@ -8,7 +8,7 @@ import os
 from markupsafe import Markup, escape
 import markdown
 import recurring_bp
-from utilities import recalculate_day_durations, run_daily_recurrence_check, check_time
+from utilities import recalculate_day_durations, run_daily_recurrence_check, check_time, get_db_connection
 
 # Import the blueprints
 from calendar_app import calendar_bp 
@@ -17,17 +17,17 @@ from projects_bp import projects_bp
 from export_data import export_data_bp
 from recurring_bp import recurring_bp 
 
+# Get the directory of the current file
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
 # Set the app up as a package
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder=os.path.join(base_dir, '..', 'templates'),
+            static_folder=os.path.join(base_dir, '..', 'static'))
 DB_NAME = 'journal.db'
 app.config['SECRET_KEY'] = 'a-super-secret-key-for-sessions'
 
 # --- Database Functions ---
-def get_db_connection():
-    conn = sqlite3.connect(DB_NAME)
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def init_db():
     conn = get_db_connection()
     conn.execute('''
