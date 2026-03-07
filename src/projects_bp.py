@@ -3,14 +3,9 @@ import sqlite3
 from markupsafe import Markup, escape
 import markdown
 from collections import defaultdict
+from utilities import get_db_connection
 
 projects_bp = Blueprint('projects_bp', __name__, url_prefix='/projects')
-
-# Helper function 
-def get_db_connection():
-    conn = sqlite3.connect('journal.db') # Use your actual DB path
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @projects_bp.route('/', methods=('GET', 'POST'))
 def projects():

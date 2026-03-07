@@ -4,16 +4,10 @@ import sqlite3
 import datetime
 import markdown
 from markupsafe import Markup, escape 
-from utilities import run_daily_recurrence_check, calculate_next_due_date 
+from utilities import run_daily_recurrence_check, calculate_next_due_date, get_db_connection
 
 # Define the Blueprint. The URL prefix will be '/todo'
 todo_bp = Blueprint('todo_bp', __name__, url_prefix='/todo')
-
-# Helper function to get database connection (copied from app.py)
-def get_db_connection():
-    conn = sqlite3.connect('journal.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @todo_bp.route('/', methods=('GET', 'POST'))
 def todo():

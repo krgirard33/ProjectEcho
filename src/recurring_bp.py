@@ -1,16 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 import sqlite3
 import datetime
-from utilities import calculate_next_due_date
+from utilities import calculate_next_due_date, get_db_connection
 
 recurring_bp = Blueprint('recurring_bp', __name__, url_prefix='/recurring')
-
-DB_NAME = 'journal.db'
-
-def get_db_connection():
-    conn = sqlite3.connect(DB_NAME)
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @recurring_bp.route('/', methods=('GET', 'POST'))
 def manage_recurring():

@@ -1,3 +1,8 @@
+"""
+I made some changes to the database scheme by adding projects, and wanted to keep all my old data, so...
+"""
+
+
 import sqlite3
 
 SOURCE_DB = 'journal - Copy.db'
@@ -52,7 +57,6 @@ def merge_sqlite_with_schema_check(source_db_path, target_db_path):
             
         common_cols_list = sorted(list(common_cols))
         
-        # --- Core Fix: Dynamic COALESCE Application ---
         columns_to_insert_str = ', '.join(f'"{c}"' for c in common_cols_list)
         
         columns_to_select_list = []
@@ -83,7 +87,7 @@ def merge_sqlite_with_schema_check(source_db_path, target_db_path):
             print("  Rolling back changes for this table.")
             target_conn.rollback() 
 
-    # 3. Commit changes and clean up
+    # Commit changes and clean up
     target_conn.commit()
     target_cursor.execute(f"DETACH DATABASE {ATTACH_ALIAS}")
     target_conn.close()
