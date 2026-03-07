@@ -1,8 +1,13 @@
 # Project Echo - WIP
 
-Interstitial Journaling app. Mostly, I need a better way to track what I am working on at work, and this concept looked interesting. 
+Interstitial Journaling app. Mostly, I need a better way to track what I am working on at work, 
+and this concept looked interesting. 
 
 reference: https://nesslabs.com/interstitial-journaling
+
+And it just kept growing. It went from "What was I doing from X to Y?" so I could fill out my timesheet, 
+to having a calendar, project management, recurring todos, and being able to export data, so when I have 
+to do my quarterly/yearly reviews I can see everything.
 
 ## Features added:
 
@@ -22,10 +27,12 @@ reference: https://nesslabs.com/interstitial-journaling
 * User Guide
 * Start & Due date show on unfinished todos
 
-## Plans for the future: 
+## Potential plans for the future: 
 
 * Maybe figure out a way to have it make me enter a goal list for the day  
 * Add markdown type formating to todos
+* Have my todos show up on the calendar on the date they are due.
+* List out the amount of time I spent on each project for the day, so I can easily see how much time I spent on each project.
 
 ### Home page
 ![Alt text](img/ProjectEcho-home.png "Home page")
