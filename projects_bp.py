@@ -49,22 +49,26 @@ def edit_project(id):
     if request.method == 'POST':
         name = request.form['name'].strip()
         charging_code = request.form.get('charging_code', '').strip() or None
-        status = request.form.get('status', 'active')
         is_active = 1 if 'is_active' in request.form else 0
         
-        if name:
-            try:
-                conn.execute('UPDATE projects SET name = ?, status = ?, is_active = ?, charging_code = ? WHERE id = ?', 
-                    (name, status, is_active, charging_code, id))
+        if not name:
+            flash("Project name is required.", "error")
+        else:
+            try:                
+                conn.execute('''
+                    UPDATE projects 
+                    SET name = ?, is_active = ?, charging_code = ? 
+                    WHERE id = ?''', 
+                    (name, is_active, charging_code, id))
                 conn.commit()
+                flash("Project updated successfully!", "success")
+                conn.close()
+                return redirect(url_for('projects_bp.projects'))
             except sqlite3.IntegrityError:
                 flash(f'Project name "{name}" is already in use.', 'error')
             except Exception as e:
                 flash(f'An error occurred: {e}', 'error')
-        
-        conn.close()
-        return redirect(url_for('projects_bp.projects'))
-    
+
     project = conn.execute('SELECT * FROM projects WHERE id = ?', (id,)).fetchone()
     conn.close()
     
